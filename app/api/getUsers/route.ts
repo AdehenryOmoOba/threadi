@@ -10,6 +10,8 @@ export async function GET(){
 
         const usersList = await db.query.users.findMany()
 
+        console.log(usersList)
+
         // Perform join between users and coupon_code toble
         // const usersList = await db.query.users.findMany({
         //   with: {
