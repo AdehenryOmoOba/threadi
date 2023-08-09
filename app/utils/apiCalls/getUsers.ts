@@ -16,7 +16,7 @@ export type TUser = {
 
 export async function getUsers() {
     
-   const response = await fetch(`http://localhost:3000/api/getUsers`, {cache: "no-store"})
+   const response = await fetch(`${origin}/api/getUsers`, {cache: "no-store"})
 
    if(!response.ok) return {error: "something went wrong"}
 

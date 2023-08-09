@@ -1,4 +1,4 @@
-// import { db } from "@/db/dbClient";
+import { db } from "@/db/dbClient";
 import { NextResponse } from 'next/server'
 
 
@@ -6,9 +6,9 @@ export async function GET(){
 
     try {
      
-        const usersList = [{uuid: 123 ,name: "foo"}]
+        // const usersList = [{uuid: 123 ,name: "foo"}]
 
-        // const usersList = await db.query.users.findMany()
+        const usersList = await db.query.users.findMany()
 
         // Perform join between users and coupon_code toble
         // const usersList = await db.query.users.findMany({

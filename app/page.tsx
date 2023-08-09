@@ -1,16 +1,11 @@
 import { getUsers } from "./utils/apiCalls/getUsers"
-// import { getIPAddress } from "./utils/libs/getIPAddress"
 
 
 export default async function Home() {
 
-  // const ipAddress = getIPAddress()
+  const usersList = await getUsers()
 
-  // console.log({ipAddress})
-
-  // const usersList = await getUsers()
-
-  const usersList = [{uuid: 123 ,name: "foo"}]
+  // const usersList = [{uuid: 123 ,name: "foo"}]
 
   
   return (

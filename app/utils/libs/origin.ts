@@ -1,10 +1,6 @@
-import { getIPAddress } from "./getIPAddress";
-
-getIPAddress
-
 let origin =
   process.env.NODE_ENV !== "production"
     ? "http://localhost:3000/"
-    : `https://${getIPAddress()}/`;
+    : `https://threadi.vercel.app/`;
 
 export default origin;
