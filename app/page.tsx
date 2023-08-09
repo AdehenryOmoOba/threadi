@@ -1,9 +1,17 @@
 import { getUsers } from "./utils/apiCalls/getUsers"
+// import { getIPAddress } from "./utils/libs/getIPAddress"
 
 
 export default async function Home() {
 
-  const usersList = await getUsers()
+  // const ipAddress = getIPAddress()
+
+  // console.log({ipAddress})
+
+  // const usersList = await getUsers()
+
+  const usersList = [{uuid: 123 ,name: "foo"}]
+
   
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

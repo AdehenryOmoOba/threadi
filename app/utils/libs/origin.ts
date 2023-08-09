@@ -1,13 +1,10 @@
-// let origin =
-//   process.env.NODE_ENV !== "production"
-//     ? "http://localhost:3000/"
-//     : "https://shopi-ten.vercel.app/";
+import { getIPAddress } from "./getIPAddress";
 
-// export default origin;
+getIPAddress
 
 let origin =
   process.env.NODE_ENV !== "production"
     ? "http://localhost:3000/"
-    : "http://localhost:3000/";
+    : `https://${getIPAddress()}/`;
 
 export default origin;
