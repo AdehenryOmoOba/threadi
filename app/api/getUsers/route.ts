@@ -6,7 +6,7 @@ export async function GET(){
 
     try {
 
-        const usersList = await db.query.users.findMany()
+        // const usersList = await db.query.users.findMany()
 
         // Perform join between users and coupon_code toble
         // const usersList = await db.query.users.findMany({
@@ -23,7 +23,7 @@ export async function GET(){
         //   }
         // })
 
-        return NextResponse.json(usersList)
+        return NextResponse.json({name: "foo"})
     } catch (error: any) {
         return NextResponse.json({error: error.message})
     }
