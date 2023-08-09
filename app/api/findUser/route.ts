@@ -1,4 +1,4 @@
-// import { db } from "@/db/dbClient";
+import { db } from "@/db/dbClient";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextRequest } from "next/server";
@@ -13,11 +13,11 @@ export async function GET(req: NextRequest){
 
         if(!username) throw new Error("Invalid username")
 
-        const user = null
+        // const user = null
 
-        // const user = await db.query.users.findFirst({
-        //     where: eq(users.username, username),
-        //   })
+        const user = await db.query.users.findFirst({
+            where: eq(users.username, username),
+          })
 
         // Perform join between users and coupon_code toble
         // const user = await db.query.users.findFirst({
