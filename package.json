@@ -3,14 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "migration:generate": "drizzle-kit generate:pg --schema=./db/schema.ts",
+    "migration:push": "node -r esbuild-register db/migrate.ts",
+    "migrate": "drizzle-kit generate:pg --schema=./db/schema.ts && node -r esbuild-register db/migrate.ts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "bs": "next build && next start",
-    "lint": "next lint",
-    "migration:generate": "drizzle-kit generate:pg --schema=./db/schema.ts",
-    "migration:push": "node -r esbuild-register db/migrate.ts",
-    "migrate": "drizzle-kit generate:pg --schema=./db/schema.ts && node -r esbuild-register db/migrate.ts"
+    "bs": "pnpm migrate && next build && next start",
+    "lint": "next lint"
   },
   "dependencies": {
     "@types/node": "20.4.8",
