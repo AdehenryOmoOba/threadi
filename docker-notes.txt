@@ -1,0 +1,18 @@
+- What is docker?
+Docker is a platform for building, running, and shipping applications
+
+- Virtual machines vs containers
+A container is an isolated enviroment for running an application
+A virtual machine is an abstraction of a machine (physical hardware)
+
+- Architecture of docker
+Docker uses a client-server architecture. The client component comuunicates with the 
+server (docker engine which takes care of building and running containers) via a RESTful API. A container is just a process
+
+- Installing docker
+
+- Development workflow
+
+- Dockerizing an application
+1. create a "Dockerfile" (without extension) in the root of the application directory.
+2. 

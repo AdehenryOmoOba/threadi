@@ -1,0 +1,119 @@
+- To create a new NextJS project with typescript using pnpm, create the project directory, open the prodect directory with vscode, open the terminal and run cammand:  "pnpm create next-app ./ --template typescript"
+- Install postgres, drizzle and esbuid-register with commands:
+   1. pnpm add drizzle-orm pg dotenv
+   2. pnpm add drizzle-kit @types/pg esbuild esbuild-register -D
+- To set up postgres database using docker:
+- Install docker on your machine and start docker
+- create a "docker-compose.yml" file in the root directory of your project and create the postgres db image which include "db" and "adminer" services
+- Open a new terminal and run command "docker compose up"
+- To use the drizzle ORM:
+   1. create a "db" directory
+   2. Define database schema in a schema.ts file inside the db directory
+   3. Create a migrate.ts file, import "dotenv/config" and configure the file to generate a migration
+   4. Push the migration to the physical database
+
+
+*** CRUD operations with drizzle ***
+
+- Create a global DB client
+ 1. Create a "dbClient.ts" file inside the "db" directory import "drizzle", "Client" and "* as schema" from "drizzle-orm/node-postgres", "pg" and "./schema.ts" respectively
+ 2. Instantiate the "Client" class and pass config object as argument with key "connectionString" and value set to database url connection string and call the "connect" method from the returned object.
+ 3. call the "drizzle" method, passing in the returned object from step 2 as frist argument and a config object as second argument with key "schema" and value "schema".
+ 
+ 
+*** Modelling relationships - exmples ***
+
+export const roleEnum = pgEnum("role", 
+    ["VENDOR", "CUSTOMER", "ADMIN"]
+)
+
+export const users = pgTable('users', {
+    uuid: uuid("uuid").defaultRandom().primaryKey(),
+    username: varchar("username",{length: 200}).unique().notNull(),
+    email: varchar("email",{length: 200}).unique().notNull(),
+    phone: varchar("phone", {length: 11}).unique(),
+    socialUser: boolean("social_user").default(false),
+    password: varchar("password",{length: 200}),
+    role: roleEnum("role").default("CUSTOMER"),
+    cart: jsonb("cart").default([]),
+})
+
+export const couponCodes = pgTable("coupon_codes", {
+    uuid: uuid("uuid").defaultRandom().primaryKey(),
+    code: char("code",{length: 6}).notNull(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    username: varchar("username").references(() => users.username).notNull().unique()
+})
+
+export const products = pgTable("products", {
+    uuid: uuid("uuid").defaultRandom().primaryKey(),
+    category: varchar("category", {length: 50}).notNull(),
+    description: varchar("description", {length: 1000}).notNull(),
+    price: real("price").notNull(),
+    image: varchar("image", {length: 500}).notNull(),
+    name: varchar("name", {length: 100}).notNull(),
+    vendorId: uuid("vendor_id").references(() => users.uuid).notNull()
+})
+
+// Modelling many to many relationship
+export const students = pgTable("students", {
+    uuid: uuid("uuid").defaultRandom().primaryKey(),
+    name: varchar("name", {length: 50}).notNull(),
+    age: smallint("age").notNull()
+})
+
+export const classes = pgTable("classes", {
+    uuid: uuid("uuid").defaultRandom().primaryKey(),
+    name: varchar("name", {length: 50}).notNull(),
+    teacher: varchar("teacher", {length: 50}).notNull(),
+})
+
+export const students_classes = pgTable("students_classes", {
+    studentId: uuid("student_id").references(() => students.uuid).notNull(),
+    classId: uuid("class_id").references(() => classes.uuid).notNull()
+},
+({classId, studentId}) => ({pkey: primaryKey(studentId, classId)})
+)
+////////////////////////////////////////////
+
+// --------------- Relations ---------------
+
+// users-couponCodes one-to-one and users-products one-to-many relations
+export const usersRelations = relations(users, ({one, many}) => ({
+    couponInfo: one(couponCodes, {
+      fields: [users.username],
+      references: [couponCodes.username]
+    }),
+    productsInfo: many(products)
+  }))
+
+// products-users one-to-many relation
+export const productsRelations = relations(products, ({one}) => ({
+    vendor: one(users, {
+        fields: [products.vendorId],
+        references: [users.uuid]
+    })
+}))
+
+// students-classes many-to-many relations
+export const studentsRelation = relations(students, ({many}) => ({students_classes: many(students_classes)}))
+
+export const classesRealtion = relations(classes, ({many}) => ({students_classes: many(students_classes)}))
+
+export const studentsClassesRelation = relations(students_classes, ({one}) => ({
+  student: one(students, {
+    fields: [students_classes.studentId],
+    references: [students.uuid]
+  }),
+  class: one(classes, {
+    fields: [students_classes.classId],
+    references: [classes.uuid]
+  })
+}))
+////////////////////////////////////////
+
+
+*** Database seeding ***
+
+
+
