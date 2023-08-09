@@ -4,9 +4,17 @@ import { Pool } from "pg";
 import "dotenv/config"
 
 
+// const pool = new Pool({
+//     connectionString: process.env.DB_URL
+// })
+
 const pool = new Pool({
-    connectionString: process.env.DB_URL
-})
+    host: "127.0.0.1",
+    port: 5432,
+    user: "postgres",
+    password: "postgres",
+    database: "test_db",
+  });
 
 const db = drizzle(pool)
 
