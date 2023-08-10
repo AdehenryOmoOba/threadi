@@ -1,4 +1,4 @@
-// import { db } from "@/db/dbClient";
+import { db } from "@/db/dbClient";
 import { classes } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from 'next/server'
@@ -8,12 +8,10 @@ export async function GET(){
 
     try {
 
-        const result = null
-
-        // const result = await db.query.classes.findMany()
+        const result = await db.query.classes.findMany()
         
         // const result = await db.query.classes.findFirst({
-        //     where: eq(classes.uuid, "9fecfb4f-27a5-4e6b-b95a-781561d9aaa0"),
+        //     where: eq(classes.uuid, "e4089ea4-186b-4f6b-ac7f-a6e210476cef"),
         //     with:{
         //         students_classes: {
         //             columns: {
