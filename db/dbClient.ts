@@ -1,6 +1,7 @@
 import { drizzle } from "drizzle-orm/node-postgres";
 import { Client } from "pg";
 import * as databaseSchema from "./schema"
+import "dotenv/config"
 
 let client;
 

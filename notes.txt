@@ -116,4 +116,35 @@ export const studentsClassesRelation = relations(students_classes, ({one}) => ({
 *** Database seeding ***
 
 
+///////////////////////////////////////////
+
+
+*** packages ***
+
+- nextJS: ui framework
+- clerk: from auth
+- uploadthing: for file uploads
+- svix: for webhooks
+- shadcn: ui components
+- tailwindcss: styling
+- dotenv: enviroment variables
+- drizzle: orm
+- pg: database
+- @clerk/themes: styling/customizing clerk components
+
+
+
+//////
+{
+  "label": "threadi",
+  "host": "13.41.196.23",
+  "user": "postgres",
+  "port": 5432,
+  "ssl": false,
+  "database": "postgres",
+  "password": "postgres"
+}
+
+
+
 

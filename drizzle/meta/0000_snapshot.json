@@ -1,11 +1,11 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "65cc7439-c6a8-4997-9301-8a5c4c20c1f2",
+  "id": "d661abcd-cf6a-4c67-9c26-58e6561575b2",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
-    "classes": {
-      "name": "classes",
+    "comments_replies": {
+      "name": "comments_replies",
       "schema": "",
       "columns": {
         "uuid": {
@@ -15,38 +15,21 @@
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "name": {
-          "name": "name",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "teacher": {
-          "name": "teacher",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {},
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "coupon_codes": {
-      "name": "coupon_codes",
-      "schema": "",
-      "columns": {
-        "uuid": {
-          "name": "uuid",
+        "parent_id": {
+          "name": "parent_id",
           "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
+          "primaryKey": false,
+          "notNull": true
         },
-        "code": {
-          "name": "code",
-          "type": "char(6)",
+        "text": {
+          "name": "text",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author": {
+          "name": "author",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
@@ -57,24 +40,105 @@
           "notNull": true,
           "default": "now()"
         },
+        "likes": {
+          "name": "likes",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reposts": {
+          "name": "reposts",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shares_count": {
+          "name": "shares_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "views_count": {
+          "name": "views_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "comments_replies_author_users_uuid_fk": {
+          "name": "comments_replies_author_users_uuid_fk",
+          "tableFrom": "comments_replies",
+          "tableTo": "users",
+          "columnsFrom": [
+            "author"
+          ],
+          "columnsTo": [
+            "uuid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    },
+    "communities": {
+      "name": "communities",
+      "schema": "",
+      "columns": {
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
         "username": {
           "name": "username",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "image": {
+          "name": "image",
           "type": "varchar",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "bio": {
+          "name": "bio",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "uuid",
           "primaryKey": false,
           "notNull": true
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "coupon_codes_username_users_username_fk": {
-          "name": "coupon_codes_username_users_username_fk",
-          "tableFrom": "coupon_codes",
+        "communities_created_by_users_uuid_fk": {
+          "name": "communities_created_by_users_uuid_fk",
+          "tableFrom": "communities",
           "tableTo": "users",
           "columnsFrom": [
-            "username"
+            "created_by"
           ],
           "columnsTo": [
-            "username"
+            "uuid"
           ],
           "onDelete": "no action",
           "onUpdate": "no action"
@@ -82,8 +146,8 @@
       },
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "coupon_codes_username_unique": {
-          "name": "coupon_codes_username_unique",
+        "communities_username_unique": {
+          "name": "communities_username_unique",
           "nullsNotDistinct": false,
           "columns": [
             "username"
@@ -91,95 +155,28 @@
         }
       }
     },
-    "products": {
-      "name": "products",
+    "test": {
+      "name": "test",
       "schema": "",
       "columns": {
-        "uuid": {
-          "name": "uuid",
+        "id": {
+          "name": "id",
           "type": "uuid",
           "primaryKey": true,
           "notNull": true,
           "default": "gen_random_uuid()"
         },
-        "category": {
-          "name": "category",
-          "type": "varchar(50)",
+        "colors": {
+          "name": "colors",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": true
         },
-        "description": {
-          "name": "description",
-          "type": "varchar(1000)",
+        "names": {
+          "name": "names",
+          "type": "text[]",
           "primaryKey": false,
-          "notNull": true
-        },
-        "price": {
-          "name": "price",
-          "type": "real",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "image": {
-          "name": "image",
-          "type": "varchar(500)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(100)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "vendor_id": {
-          "name": "vendor_id",
-          "type": "uuid",
-          "primaryKey": false,
-          "notNull": true
-        }
-      },
-      "indexes": {},
-      "foreignKeys": {
-        "products_vendor_id_users_uuid_fk": {
-          "name": "products_vendor_id_users_uuid_fk",
-          "tableFrom": "products",
-          "tableTo": "users",
-          "columnsFrom": [
-            "vendor_id"
-          ],
-          "columnsTo": [
-            "uuid"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
-      "compositePrimaryKeys": {},
-      "uniqueConstraints": {}
-    },
-    "students": {
-      "name": "students",
-      "schema": "",
-      "columns": {
-        "uuid": {
-          "name": "uuid",
-          "type": "uuid",
-          "primaryKey": true,
-          "notNull": true,
-          "default": "gen_random_uuid()"
-        },
-        "name": {
-          "name": "name",
-          "type": "varchar(50)",
-          "primaryKey": false,
-          "notNull": true
-        },
-        "age": {
-          "name": "age",
-          "type": "smallint",
-          "primaryKey": false,
-          "notNull": true
+          "notNull": false
         }
       },
       "indexes": {},
@@ -187,31 +184,77 @@
       "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
-    "students_classes": {
-      "name": "students_classes",
+    "threadis": {
+      "name": "threadis",
       "schema": "",
       "columns": {
-        "student_id": {
-          "name": "student_id",
+        "uuid": {
+          "name": "uuid",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "text": {
+          "name": "text",
+          "type": "varchar(200)",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author": {
+          "name": "author",
           "type": "uuid",
           "primaryKey": false,
           "notNull": true
         },
-        "class_id": {
-          "name": "class_id",
+        "community": {
+          "name": "community",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "likes": {
+          "name": "likes",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "reposts": {
+          "name": "reposts",
+          "type": "text[]",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "shares_count": {
+          "name": "shares_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
+        },
+        "views_count": {
+          "name": "views_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         }
       },
       "indexes": {},
       "foreignKeys": {
-        "students_classes_student_id_students_uuid_fk": {
-          "name": "students_classes_student_id_students_uuid_fk",
-          "tableFrom": "students_classes",
-          "tableTo": "students",
+        "threadis_author_users_uuid_fk": {
+          "name": "threadis_author_users_uuid_fk",
+          "tableFrom": "threadis",
+          "tableTo": "users",
           "columnsFrom": [
-            "student_id"
+            "author"
           ],
           "columnsTo": [
             "uuid"
@@ -219,12 +262,12 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "students_classes_class_id_classes_uuid_fk": {
-          "name": "students_classes_class_id_classes_uuid_fk",
-          "tableFrom": "students_classes",
-          "tableTo": "classes",
+        "threadis_community_communities_uuid_fk": {
+          "name": "threadis_community_communities_uuid_fk",
+          "tableFrom": "threadis",
+          "tableTo": "communities",
           "columnsFrom": [
-            "class_id"
+            "community"
           ],
           "columnsTo": [
             "uuid"
@@ -233,15 +276,7 @@
           "onUpdate": "no action"
         }
       },
-      "compositePrimaryKeys": {
-        "students_classes_student_id_class_id": {
-          "name": "students_classes_student_id_class_id",
-          "columns": [
-            "student_id",
-            "class_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {}
     },
     "users": {
@@ -261,44 +296,30 @@
           "primaryKey": false,
           "notNull": true
         },
-        "email": {
-          "name": "email",
+        "name": {
+          "name": "name",
           "type": "varchar(200)",
           "primaryKey": false,
           "notNull": true
         },
-        "phone": {
-          "name": "phone",
-          "type": "varchar(11)",
+        "image": {
+          "name": "image",
+          "type": "varchar",
           "primaryKey": false,
           "notNull": false
         },
-        "social_user": {
-          "name": "social_user",
+        "bio": {
+          "name": "bio",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "onboarded": {
+          "name": "onboarded",
           "type": "boolean",
           "primaryKey": false,
           "notNull": false,
           "default": false
-        },
-        "password": {
-          "name": "password",
-          "type": "varchar(200)",
-          "primaryKey": false,
-          "notNull": false
-        },
-        "role": {
-          "name": "role",
-          "type": "role",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'CUSTOMER'"
-        },
-        "cart": {
-          "name": "cart",
-          "type": "jsonb",
-          "primaryKey": false,
-          "notNull": false,
-          "default": "'[]'::jsonb"
         }
       },
       "indexes": {},
@@ -311,34 +332,68 @@
           "columns": [
             "username"
           ]
-        },
-        "users_email_unique": {
-          "name": "users_email_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "email"
-          ]
-        },
-        "users_phone_unique": {
-          "name": "users_phone_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "phone"
-          ]
         }
       }
+    },
+    "users_communities": {
+      "name": "users_communities",
+      "schema": "",
+      "columns": {
+        "user_id": {
+          "name": "user_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "community_id": {
+          "name": "community_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "users_communities_user_id_users_uuid_fk": {
+          "name": "users_communities_user_id_users_uuid_fk",
+          "tableFrom": "users_communities",
+          "tableTo": "users",
+          "columnsFrom": [
+            "user_id"
+          ],
+          "columnsTo": [
+            "uuid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "users_communities_community_id_communities_uuid_fk": {
+          "name": "users_communities_community_id_communities_uuid_fk",
+          "tableFrom": "users_communities",
+          "tableTo": "communities",
+          "columnsFrom": [
+            "community_id"
+          ],
+          "columnsTo": [
+            "uuid"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "users_communities_user_id_community_id": {
+          "name": "users_communities_user_id_community_id",
+          "columns": [
+            "user_id",
+            "community_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
     }
   },
-  "enums": {
-    "role": {
-      "name": "role",
-      "values": {
-        "VENDOR": "VENDOR",
-        "CUSTOMER": "CUSTOMER",
-        "ADMIN": "ADMIN"
-      }
-    }
-  },
+  "enums": {},
   "schemas": {},
   "_meta": {
     "schemas": {},
