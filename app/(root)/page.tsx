@@ -7,7 +7,7 @@ export default async function Home() {
   
   const user = await currentUser()
 
-  const response = await getThreadis(1, 10)
+  const response = await getThreadis(1, 500)
 
   const threadis = response && response.threads
 
