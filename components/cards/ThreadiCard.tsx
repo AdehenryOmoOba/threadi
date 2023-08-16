@@ -24,6 +24,7 @@ type Props = {
 }
 
 function ThreadiCard({id, currentUser, content, author, communityName, communityImage, communityId, createdAt,commentsCount,isComment=false}: Props) {
+
  
   const commentTense = commentsCount < 2 ? "comment" : "comments"
 
@@ -33,7 +34,7 @@ function ThreadiCard({id, currentUser, content, author, communityName, community
         <div className='flex w-full flex-1 flex-row gap-4'>
           <div className='flex flex-col items-center'>
             <Link href={`/profile/${author.author_uuid}`} className='relative h-11 w-11'>
-              <Image src={defaultProfilePhoto} alt="profile image" fill className='cursor-pointer rounded-full'/>
+              <Image src={author.author_image} alt="profile image" fill className='cursor-pointer rounded-full'/>
             </Link>
             <div className='thread-card_bar' />
           </div>
