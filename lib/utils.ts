@@ -1,5 +1,5 @@
 import { type ClassValue, clsx } from "clsx";
-import { revalidatePath } from "next/cache";
+import { revalidatePath ,revalidateTag } from "next/cache";
 import { twMerge } from "tailwind-merge";
 
 
@@ -134,7 +134,7 @@ type Threadi =  {
   } | null
 }
 
-type NewThreadInfo = {
+export type NewThreadInfo = {
   text: string;
   author: string;
   community: string | null;
@@ -209,12 +209,13 @@ type GetThreadis = {
 export async function getThreadis(page=1, size=20): Promise<GetThreadis | null> {
 
   try {
-    const response = await fetch(`${origin}api/get-threadis?page=${page}&size=${size}`)
+    const response = await fetch(`${origin}api/get-threadis?page=${page}&size=${size}`, {
+      cache: "no-store"
+    })
 
     if(!response.ok) throw new Error("No threadis")
   
     const threadis: GetThreadis = await response.json()
-
   
     return threadis
 
@@ -241,13 +242,14 @@ export async function getComments(id: string): Promise<Threadi[] | null> {
   }
 }
 
-export async function createThreadi({author, community,path,text}: NewThreadInfo) {
+export async function createThreadi(threadiInfo: NewThreadInfo) {
   try {
-    await fetch(`${origin}api/create-threadi`, {
+    const response = await fetch(`${origin}api/create-threadi`, {
       method: "POST",
-      body: JSON.stringify({author, text, community})
+      body: JSON.stringify(threadiInfo)
     })
-    revalidatePath("/")
+    await response.json()
+    revalidatePath("/?tag=tag")
   } catch (error: any) {
     console.log(error.message)
   }
