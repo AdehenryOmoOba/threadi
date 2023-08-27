@@ -1,30 +1,23 @@
-import React from 'react'
-import { findUser } from '@/lib/utils'
-import { redirect } from 'next/navigation'
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import PostThread from '@/components/forms/PostThread'
-import {currentUser} from "@clerk/nextjs"
+import { getServerSession } from 'next-auth'
+import {redirect} from "next/navigation"
 
 
 async function page() {
 
-  const clerkUser = await currentUser()
+  const session = await getServerSession(authOptions)
 
-  if(!clerkUser) return null
+  const user = session?.user
 
-  const {username} = clerkUser
+  if(!user) redirect("/login")
 
-  console.log({username})
-
-  const dbUser = username && await findUser(username)
-
-  if(!dbUser) return null
-
-  if(!dbUser.onboarded) redirect("/onboarding")
+  if(!user.onboarded) redirect("/onboarding")
 
   return (
     <>
       <h1 className='head-text'>Create Thread</h1>
-      <PostThread userId={dbUser.uuid} />
+      <PostThread userId={user.pgUUID}/>
     </>
   )
 }

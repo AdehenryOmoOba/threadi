@@ -1,33 +1,28 @@
-import { db } from "@/db/dbClient";
+import { db, dbClient } from "@/db/dbClient";
 import { users } from "@/db/schema";
-import { eq } from "drizzle-orm";
+import { eq , sql} from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { NextResponse } from 'next/server'
+import { userAndThreadCount } from "../sql";
 
 
 export async function GET(req: NextRequest){
 
-    const username = new URL(req.url).searchParams.get("username")
+    const id = new URL(req.url).searchParams.get("id")
 
     try {
 
-        if(!username) throw new Error("Invalid username")
+        if(!id) throw new Error("Invalid id")
 
-        const user = await db.query.users.findFirst({
-            where: eq(users.username, username),
-            // with: {
-            //     communitiesInfo: {
-            //         columns: {},
-            //         with: {
-            //             communityInfo: true
-            //         }
-            //     }
-            // }
-        })
+        const result =  await db.execute(sql.raw(userAndThreadCount(id)))
 
-        if(!user) throw new Error("user not found")
-        return NextResponse.json(user)
+        if(!result.rows.length) throw new Error("user not found")
+
+        const userAndThreadsInfo = result.rows[0]
+
+        return NextResponse.json(userAndThreadsInfo)
+
     } catch (error: any) {
         return NextResponse.json({error: error.message})
-    }
+    } 
 }

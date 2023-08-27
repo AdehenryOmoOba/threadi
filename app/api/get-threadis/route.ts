@@ -1,4 +1,4 @@
-import { db } from "@/db/dbClient";
+import { db, dbClient } from "@/db/dbClient";
 import { threadis } from "@/db/schema";
 import { threadisCleanUp } from "@/lib/utils";
 import { sql} from "drizzle-orm";
@@ -16,6 +16,8 @@ export async function GET(req: NextRequest){
     const skip = (pageNumber - 1) * pageSize
   
     try {
+
+        
 
         const response = await db.execute(sql.raw(topThreadisSql(skip, pageSize)))
 
@@ -35,5 +37,7 @@ export async function GET(req: NextRequest){
   
     } catch (error: any) {
         return NextResponse.json({error: error.message,},{status: 501})
+    } finally {
+        // 
     }
 }

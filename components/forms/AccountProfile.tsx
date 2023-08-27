@@ -13,16 +13,16 @@ import { Textarea } from '../ui/textarea'
 import { isBase64Image, updateUser } from '@/lib/utils'
 import { useUploadThing } from '@/lib/uploadthing'
 import { usePathname, useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
+import defaultImage from "../../public/assets/profile.svg"
 
 
 interface AccountProfileProps {
   user: {
-    id?: string
-    objectId?: string
-    username?: string
-    name?: string
-    bio?: string
-    image?: string
+    id: string,
+    name: string,
+    image: string,
+    bio: string
   } 
 }
 
@@ -31,13 +31,13 @@ function AccountProfile({user}: AccountProfileProps) {
   const {startUpload} = useUploadThing("media")
   const router = useRouter()
   const pathname = usePathname()
+  const {update, data: session} = useSession()
 
   const form = useForm({
     resolver: zodResolver(UserValidationSchema),
     defaultValues: {
-      profile_photo: user?.image || "",
+      profile_photo: user?.image || defaultImage,
       name: user?.name || "",
-      username: user?.username || "",
       bio: user?.bio || ""
     }
   })
@@ -50,17 +50,20 @@ function AccountProfile({user}: AccountProfileProps) {
 
     if(file && isDifferentImage){
       const imageResponse = await startUpload(file)
-      console.log({imageResponse})
       if(imageResponse && imageResponse[0].url)
       values.profile_photo = imageResponse[0].url
     }
 
     // Update user profile backend
     try {
-      const {bio, name, profile_photo, username} = values
-      const updatedUser = await updateUser({name, username, bio, image: profile_photo, path: pathname})
-      console.log({updateUser})
+      const {bio, name, profile_photo} = values
+
+      const response = await updateUser({name, bio, image: profile_photo, path: pathname, uuid: user.id})
+      
+      if(!response.error) await update({...session, user: {...session?.user, onboarded: true, name: response.name, image: response.image, bio: response.bio}})
+              
       pathname === "/profile/edit" ? router.back() : router.push("/")
+
     } catch (error: any) {
       console.log(error.message)
     }
@@ -113,20 +116,6 @@ function AccountProfile({user}: AccountProfileProps) {
           render={({ field }) => (
             <FormItem className='flex flex-col gap-3 w-full'>
               <FormLabel className='text-base1-semibold text-light-2'>Name</FormLabel>
-              <FormControl>
-                <Input {...field} type='text' className='account-form_input no-focus'/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem className='flex flex-col gap-3 w-full'>
-              <FormLabel className='text-base1-semibold text-light-2'>Username</FormLabel>
               <FormControl>
                 <Input {...field} type='text' className='account-form_input no-focus'/>
               </FormControl>

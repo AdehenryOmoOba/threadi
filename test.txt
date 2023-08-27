@@ -1,0 +1,16 @@
+  {
+    thread_uuid: string
+    thread_text: string
+    thread_author: string
+    thread_created_at: string
+    comments: 
+      {
+        comment_uuid: string
+        comment_author: {
+          name: string
+          image: string
+        }
+      }[]
+    
+    replies_count: number
+  }[]

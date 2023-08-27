@@ -1,10 +1,12 @@
-import { db } from "@/db/dbClient";
+import { db, dbClient } from "@/db/dbClient";
 import { NextResponse } from 'next/server'
 
 
 export async function GET(){
 
     try {
+
+        
      
         // const usersList = [{uuid: 123 ,name: "foo"}]
 
@@ -28,5 +30,5 @@ export async function GET(){
         return NextResponse.json(usersList)
     } catch (error: any) {
         return NextResponse.json({error: error.message})
-    }
+    } 
 }

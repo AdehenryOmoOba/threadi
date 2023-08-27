@@ -49,5 +49,8 @@
 -- WHERE "id" = '3f47873e-1447-4c41-85bc-d4079194e6d6';
 
 UPDATE "users" 
-SET "image" = 'https://firebasestorage.googleapis.com/v0/b/threadi-b2a37.appspot.com/o/random_profile_photos%2Fsusan.jpeg?alt=media&token=8ca39098-b2b2-4eaf-8b29-ccc7465b6f99'
-WHERE "username" = 'susan_johnson';
+SET "image" = 'https://lh3.googleusercontent.com/a/AAcHTtd0NIKJEkzcmmx88p0RYy3UckTk99Jm0DoaovQ_2kmKn68=s96-c'
+WHERE "email" = 'adefemiadelaja@gmail.com';
+
+-- DELETE FROM "users"
+-- WHERE email = 'adefemiadelaja@gmail.com';

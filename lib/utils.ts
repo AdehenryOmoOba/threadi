@@ -10,84 +10,9 @@ let origin =
 
 export default origin;
 
-export type ThreadRow =   {
-  thread_uuid: string,
-  thread_text: string,
-  author: string,
-  community: string,
-  created_at: string,
-  likes: string[] | null,
-  reposts: string[] | null,
-  shares_count:  number,
-  views_count:  number,
-  comments_count: number,
-  community_uuid: string,
-  community_name: string,
-  community_image: string,
-  thread_author: {
-    author_uuid: string,
-    author_username: string,
-    author_name: string,
-    author_image: string,
-    author_bio: string,
-    author_onboarded: boolean
-  },
-  comments: {
-    comment_uuid: string,
-    comment_text: string,
-    user_uuid: string,
-    user_username: string,
-    user_name: string,
-    user_image: string,
-    user_bio: string,
-    user_onboarded: boolean
-  }[]
-}
-
-type CommentsRepliesRow = {
-    comment_uuid: string,
-    comment_text:  string,
-    comment_parent_id: string,
-    replies_count: number,
-    replies: {
-      comment_uuid: string,
-      comment_text: string,
-      comment_parent_id: string,
-      author_image: string
-    }[]
-  }
-  
-
-
-export function threadisCleanUp(data: unknown[]): ThreadRow[] {
-  const cleanDtata = data.map((row: any) => {
-    if(!row.comments[0].comment_uuid){
-      row.comments = []
-      row.comments_count = 0
-    }else{
-      row.comments_count = row.comments.length
-    }
-    return row
-  })
-  return cleanDtata
-}
-
-export function commentsRepliesCleanUp(data: unknown[]): CommentsRepliesRow[] {
-  const cleanDtata = data.map((row: any) => {
-    if(!row.replies[0].comment_uuid){
-      row.replies = []
-      row.replies_count = 0
-    }else{
-      row.replies_count = row.replies.length
-    }
-    return row
-  })
-  return cleanDtata
-}
-
 
 export type UserInfo = {
-  username: string,
+  uuid: string
   name: string,
   bio: string,
   image: string,
@@ -95,7 +20,7 @@ export type UserInfo = {
 }
 
 type DbUser = {
-  username: string;
+  email: string;
   image: string | null;
   uuid: string;
   name: string;
@@ -141,6 +66,151 @@ export type NewThreadInfo = {
   path: string
 }
 
+export type NewCommentReplyInfo = {
+  author: string;
+  parentId: string
+  text: string;
+  path: string
+}
+
+export type ThreadRow =   {
+  thread_uuid: string,
+  thread_text: string,
+  author: string,
+  community: string,
+  created_at: string,
+  likes: string[] | null,
+  reposts: string[] | null,
+  shares_count:  number,
+  views_count:  number,
+  comments_count: number,
+  community_uuid: string,
+  community_name: string,
+  community_image: string,
+  thread_author: {
+    author_uuid: string,
+    author_username: string,
+    author_name: string,
+    author_image: string,
+    author_bio: string,
+    author_onboarded: boolean
+  },
+  comments: {
+    comment_uuid: string,
+    comment_text: string,
+    user_uuid: string,
+    user_username: string,
+    user_name: string,
+    user_image: string,
+    user_bio: string,
+    user_onboarded: boolean
+  }[]
+}
+
+export type CommentsRepliesRow = {
+  uuid: string
+  text: string
+  community: {
+    uuid: string 
+    name: string
+    image: string
+  } | null
+  created_at: string
+  likes: string[] | null
+  reposts: string[] | null
+  shares_count: number
+  views_count: number
+  parent_id: string
+  author: string
+  thread_author_name: string
+  thread_author_image: string
+  replies:     {
+    comment_uuid: string
+    comment_text: string
+    comment_parent_id: string
+    comment_created_at: string
+    comment_author_name: string
+    comment_author_image: string
+    comment_author_uuid: string
+    replies_count: number
+  }[],
+  replies_count: number
+}
+
+type UserThreadsAndCoomentsRow = {
+  thread_uuid: string
+  thread_text: string
+  thread_author: string
+  thread_created_at: string
+  comments: {
+      comment_uuid: string,
+      comment_text: string,
+      comment_created_at: string,
+      comment_author: {
+        name: string,
+        image: string,
+        uuid: string
+      }
+  }[]
+}
+
+export type UserAndThreadCount =  {
+  uuid: string
+  email: string
+  password: string
+  name: string
+  image: string
+  bio: string
+  onboarded: boolean
+  social_media_user: boolean
+  thread_count: number
+}
+
+export type FetchUsers = {
+  searchString?: string 
+  userId?: string
+  pageNumber?: number
+  pageSize?: number
+  sortBy?: string
+}
+
+export function threadisCleanUp(data: unknown[]): ThreadRow[] {
+  const cleanDtata = data.map((row: any) => {
+    if(!row.comments[0].comment_uuid){
+      row.comments = []
+      row.comments_count = 0
+    }else{
+      row.comments_count = row.comments.length
+    }
+    return row
+  })
+  return cleanDtata
+}
+
+export function commentsRepliesCleanUp(data: any[]): CommentsRepliesRow {
+  
+  const item: CommentsRepliesRow = data[0]
+  
+  if(!item.replies){
+    item.replies = []
+    item.replies_count = 0
+  }else{
+    item.replies_count = item.replies.length
+  }
+  return item
+}
+
+export function userThreadsAndCoomentsCleanUp(data: any[]): UserThreadsAndCoomentsRow[] {
+ const cleanDtata = data.map((row) => {
+    if(row.comments[0].comment_author.name === null){
+      row.comments = []
+    }
+    row.replies_count = row.comments.length
+    return row
+  })
+  return cleanDtata
+}
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -178,6 +248,22 @@ export function formatThreadCount(count: number): string {
   }
 }
 
+export async function createUser({email, password, confirmPassword}: {email: string, password: string, confirmPassword: string}) {
+
+  try {
+    if(password !== confirmPassword) throw new Error("Password and confirm password must match.")
+    const response = await fetch(`${origin}api/create-user`, {
+      method: "POST",
+      body: JSON.stringify({email, password})
+    })
+    const newUser = await response.json()
+    console.log({newUser})
+    return newUser
+  } catch (error: any) {
+    console.log(error.message)
+  }
+}
+
 export async function updateUser(userInfo: UserInfo) {
   try {
     const response = await fetch(`${origin}api/update-user`, {
@@ -185,16 +271,17 @@ export async function updateUser(userInfo: UserInfo) {
       body: JSON.stringify(userInfo)
     })
     const updatedUser = await response.json()
-    return updatedUser
+    return updatedUser[0]
   } catch (error: any) {
     console.log(error.message)
+    return {error: error.message}
   }
 }
 
-export async function findUser(username: string) {
+export async function findUser(id: string) {
   try {
-    const response = await fetch(`${origin}api/find-user?username=${username}`)
-    const user: DbUser = await response.json()
+    const response = await fetch(`${origin}api/find-user?id=${id}`)
+    const user: UserAndThreadCount = await response.json()
     return user
   } catch (error: any) {
     console.log(error.message)
@@ -214,7 +301,7 @@ export async function getThreadis(page=1, size=20): Promise<GetThreadis | null> 
     })
 
     if(!response.ok) throw new Error("No threadis")
-  
+
     const threadis: GetThreadis = await response.json()
   
     return threadis
@@ -225,13 +312,14 @@ export async function getThreadis(page=1, size=20): Promise<GetThreadis | null> 
   }
 }
 
-export async function getComments(id: string): Promise<Threadi[] | null> {
-
+export async function getComments(id: string, table: string) {
+    
   try {
+    const response = await fetch(`${origin}api/comments?id=${id}&table=${table}`, {
+      cache: "no-store"
+    })
 
-    const response = await fetch(`${origin}api/comments?id=${id}`)
-
-    const comments = await response.json()
+    const comments: CommentsRepliesRow = await response.json()
 
     return comments
 
@@ -242,15 +330,69 @@ export async function getComments(id: string): Promise<Threadi[] | null> {
   }
 }
 
-export async function createThreadi(threadiInfo: NewThreadInfo) {
+export async function createThreadi({author, community,text}: NewThreadInfo) {
   try {
     const response = await fetch(`${origin}api/create-threadi`, {
       method: "POST",
-      body: JSON.stringify(threadiInfo)
+      body: JSON.stringify({author, text, community})
     })
     await response.json()
-    revalidatePath("/?tag=tag")
+    revalidatePath("/")
   } catch (error: any) {
     console.log(error.message)
+  }
+}
+
+export async function createCommentReply({author, parentId,path,text}: NewCommentReplyInfo) {
+  try {
+    const response = await fetch(`${origin}api/create-comment-reply`, {
+      method: "POST",
+      body: JSON.stringify({author, parentId, text,path})
+    })
+    await response.json()
+  } catch (error: any) {
+    console.log("from utils: createCommentReply",error.message)
+  }
+}
+
+export async function finUserThreadsAndComments(userId: string) {
+    
+  try {
+    const response = await fetch(`${origin}api/find-user-threads?id=${userId}`, {
+      cache: "no-store"
+    })
+
+    const userThreadsAndComments = await response.json()
+
+    return userThreadsAndComments
+
+  } catch (error: any) {
+    console.log(error.message)
+    return null 
+  }
+}
+
+type FetchUsersResult = {
+    uuid: string
+    name: string
+    email: string
+    image: string
+  }
+
+
+export async function fetchUsers({searchString, userId, pageNumber, pageSize, sortBy}: FetchUsers) {
+    
+  try {
+    const response = await fetch(`${origin}api/fetch-users?searchString=${searchString}&userId=${userId}&pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}`, {
+      cache: "no-store"
+    })
+
+    const users = await response.json()
+
+    return users as {users: FetchUsersResult[], isNext: boolean}
+
+  } catch (error: any) {
+    console.log(error.message)
+    return null 
   }
 }

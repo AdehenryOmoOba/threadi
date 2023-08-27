@@ -1,11 +1,12 @@
 import '../globals.css'
-import { ClerkProvider } from '@clerk/nextjs'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import TopBar from '@/components/shared/TopBar'
 import LeftSideBar from '@/components/shared/LeftSideBar'
 import RightSideBar from '@/components/shared/RightSideBar'
 import BottomBar from '@/components/shared/BottomBar'
+import NextAuthSessionProvider from '../(auth)/NextAuthSessionProvider'
+import BackButton from '@/components/shared/BackButton'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,12 +23,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ClerkProvider>
+      <NextAuthSessionProvider>
         <body className={`${inter.className}`}>
           <TopBar />
           <main className='flex flex-row'>
             <LeftSideBar />
             <section className="main-container">
+              <BackButton />
               <div className="w-full max-w-4xl">
                 {children}
               </div>
@@ -36,7 +38,7 @@ export default function RootLayout({
           </main>
           <BottomBar/>
         </body>
-      </ClerkProvider>
+      </NextAuthSessionProvider>
     </html>
   )
 }

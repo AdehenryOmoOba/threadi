@@ -97,7 +97,7 @@
   }
 
   .custom-scrollbar::-webkit-scrollbar {
-    width: 3px;
+    width: 0px;
     height: 3px;
     border-radius: 2px;
   }
@@ -114,11 +114,6 @@
   .custom-scrollbar::-webkit-scrollbar-thumb:hover {
     background: #7878a3;
   }
-}
-
-/* Clerk Responsive fix */
-.cl-organizationSwitcherTrigger .cl-userPreview .cl-userPreviewTextContainer {
-  @apply max-sm:hidden;
 }
 
 .cl-organizationSwitcherTrigger
@@ -153,7 +148,7 @@
 
 /* Comment Form */
 .comment-form {
-  @apply mt-10 flex items-center gap-4 border-y border-y-dark-4 py-5 max-xs:flex-col !important;
+  @apply mt-10 flex items-center gap-4 border-y border-y-dark-3 py-5 max-xs:flex-col !important;
 }
 
 .comment-form_btn {

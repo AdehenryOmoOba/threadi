@@ -1,27 +1,23 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import AccountProfile from '@/components/forms/AccountProfile'
+import { getServerSession } from 'next-auth'
+import { redirect } from 'next/navigation'
 import React from 'react'
-import {currentUser} from "@clerk/nextjs"
+import defaultImage from "../../../public/assets/profile.svg"
 
 
 async function page() {
+  const session = await getServerSession(authOptions)
 
-  const user = await currentUser()
+  const user = session?.user
 
-  const userInfo = {
-    id: "",
-    username: "",
-    name: "",
-    bio: "",
-    image: ""
-  }
+  if(!user || user.onboarded === true) return redirect("/")
 
   const userData = {
-    id: user?.id,
-    objectId: userInfo?.id || undefined,
-    username: userInfo?.username || undefined,
-    name: userInfo?.name || user?.firstName || undefined,
-    bio: userInfo?.bio || undefined,
-    image: userInfo?.image || user?.imageUrl || undefined
+    id: user.pgUUID,
+    name: user?.name || "",
+    image: user?.image ||  defaultImage,
+    bio: user.bio || ""
   }
 
 

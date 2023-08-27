@@ -1,7 +1,7 @@
 import "../globals.css"
 import type { Metadata } from 'next'
-import {ClerkProvider} from "@clerk/nextjs"
 import { Inter } from 'next/font/google'
+import NextAuthSessionProvider from "./NextAuthSessionProvider"
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -18,11 +18,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <ClerkProvider>
+      <NextAuthSessionProvider>
         <body className={`${inter.className} bg-dark-1`}>
           {children}
         </body>
-      </ClerkProvider>
+      </NextAuthSessionProvider>
     </html>
   )
 }
