@@ -25,7 +25,7 @@ function BackButton() {
 
   return (
     <div className='w-full h-max -mt-4 mb-4 md:-mt-4 max-w-[900px]'>
-      <button onClick={() => router.back()} className='text-light-1 text-heading3-bold'>
+      <button onClick={() => router.back()} className='text-light-3 text-heading3-bold'>
         <MdOutlineKeyboardBackspace />
       </button>
     </div>
