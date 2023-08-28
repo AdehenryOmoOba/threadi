@@ -9,6 +9,12 @@ const inter = Inter({ subsets: ['latin'] })
 export const metadata: Metadata = {
   title: 'Threadi',
   description: 'A social blogging website powered by NextJS',
+  viewport: {
+    initialScale: 1,
+    maximumScale: 1,
+    width: 'device-width',
+    userScalable: false
+  }
 }
 
 export default function RootLayout({
