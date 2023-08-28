@@ -2,6 +2,7 @@ import ThreadiCard from "@/components/cards/ThreadiCard"
 import { getThreadis } from "@/lib/utils"
 import { getServerSession } from "next-auth"
 import { authOptions } from "../api/auth/[...nextauth]/route"
+import HeadText from "@/components/shared/HeadText"
 
 
 export default async function Home() {
@@ -20,7 +21,8 @@ export default async function Home() {
 
   return (
     <>
-     <h1 className="head-text">Home Page 👋</h1>
+     {/* <h1 className="head-text">Home Page 👋</h1> */}
+     <HeadText content='Home' />
      <section className="mt-9 flex flex-col gap-10">
       {
         !threadis?.length ? (

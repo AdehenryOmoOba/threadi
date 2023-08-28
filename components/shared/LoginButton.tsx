@@ -2,12 +2,13 @@
 import React from 'react'
 import { Button } from '../ui/button'
 import { useRouter } from 'next/navigation'
+import { HiOutlineLogin } from 'react-icons/hi'
 
 function LoginButton() {
   const router = useRouter()
   return (
-    <Button onClick={() => router.push("/login")} className='bg-dark-1 text-[14px] text-slate-400 font-semibold border border-slate-600'>
-      Login
+    <Button onClick={() => router.push("/login")} className='bg-transparent rounded-lg text-[24px] text-slate-500'>
+      <HiOutlineLogin />
     </Button>
   )
 }

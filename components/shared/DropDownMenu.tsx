@@ -9,7 +9,7 @@ export function DropdownMenuCheckboxes({profileImage}: {profileImage: string}) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild className="w-max h-12 rounded-lg">
+      <DropdownMenuTrigger asChild className="w-max h-12 rounded-lg ml-4">
         <Button  className="flex gap-4 bg-black text-slate-400">
           <Image src={profileImage} alt="profile photo" width={24} height={24} className="rounded-full"/>
           <p className="hidden md:inline-block text-[14px]">Personal Organisations</p>

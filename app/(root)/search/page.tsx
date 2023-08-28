@@ -2,6 +2,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import { fetchUsers, findUser } from '@/lib/utils'
 import { getServerSession } from 'next-auth'
 import UserCard from '@/components/cards/UserCard'
+import HeadText from '@/components/shared/HeadText'
 
 
 async function page() {
@@ -14,8 +15,9 @@ async function page() {
   
   return (
     <section>
-      <h1 className='head-text mb-10'>Search</h1>
-      
+      {/* <h1 className='head-text mb-10'>Search</h1> */}
+      <HeadText content='Search' />
+    
       {/* TODO: Search bar  */}
 
       <div className="mt-14 flex flex-col gap-9">

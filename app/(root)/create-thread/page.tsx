@@ -1,5 +1,6 @@
 import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import PostThread from '@/components/forms/PostThread'
+import HeadText from '@/components/shared/HeadText'
 import { getServerSession } from 'next-auth'
 import {redirect} from "next/navigation"
 
@@ -16,7 +17,8 @@ async function page() {
 
   return (
     <>
-      <h1 className='head-text'>Create Thread</h1>
+      {/* <h1 className='head-text'>Create Thread</h1> */}
+      <HeadText content='Create Thread' />
       <PostThread userId={user.pgUUID}/>
     </>
   )

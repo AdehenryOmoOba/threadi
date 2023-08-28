@@ -16,6 +16,7 @@ export async function POST(req: NextRequest){
     try {
         
         const newThreadi = await db.insert(commentsReplies).values({author, text, parentId}).returning()
+        console.log("from create comment_replies route: ", {path})
         revalidatePath(path)
         return NextResponse.json(newThreadi)
     } catch (error: any) {

@@ -17,7 +17,7 @@ function LinkItems({label, route, imgURL}: {label: string, route: string, imgURL
   if(!data?.user && route === "/profile") route = "#"
 
   return (
-    <Link key={label} href={route} className={`leftsidebar_link ${isActive && "bg-primary-500"}`}>
+    <Link key={label} href={route} className={`leftsidebar_link ${isActive && "bg-primary-500"} `}>
     <Image src={imgURL} alt={label} width={24} height={24} />
     <p className="text-light-1 max-lg:hidden">{label}</p>
   </Link>

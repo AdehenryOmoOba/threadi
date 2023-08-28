@@ -296,9 +296,7 @@ type GetThreadis = {
 export async function getThreadis(page=1, size=20): Promise<GetThreadis | null> {
 
   try {
-    const response = await fetch(`${origin}api/get-threadis?page=${page}&size=${size}`, {
-      cache: "no-store"
-    })
+    const response = await fetch(`${origin}api/get-threadis?page=${page}&size=${size}`)
 
     if(!response.ok) throw new Error("No threadis")
 
@@ -358,9 +356,7 @@ export async function createCommentReply({author, parentId,path,text}: NewCommen
 export async function finUserThreadsAndComments(userId: string) {
     
   try {
-    const response = await fetch(`${origin}api/find-user-threads?id=${userId}`, {
-      cache: "no-store"
-    })
+    const response = await fetch(`${origin}api/find-user-threads?id=${userId}`)
 
     const userThreadsAndComments = await response.json()
 
@@ -383,9 +379,7 @@ type FetchUsersResult = {
 export async function fetchUsers({searchString, userId, pageNumber, pageSize, sortBy}: FetchUsers) {
     
   try {
-    const response = await fetch(`${origin}api/fetch-users?searchString=${searchString}&userId=${userId}&pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}`, {
-      cache: "no-store"
-    })
+    const response = await fetch(`${origin}api/fetch-users?searchString=${searchString}&userId=${userId}&pageNumber=${pageNumber}&pageSize=${pageSize}&sortBy=${sortBy}`)
 
     const users = await response.json()
 

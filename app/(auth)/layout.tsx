@@ -1,15 +1,15 @@
 import "../globals.css"
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Inter} from 'next/font/google'
 import NextAuthSessionProvider from "./NextAuthSessionProvider"
 
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
-    title: 'Threadi',
-    description: 'A social blogging website powered by NextJS',
-  }
+  title: 'Threadi',
+  description: 'A social blogging website powered by NextJS',
+}
 
 export default function RootLayout({
   children,
