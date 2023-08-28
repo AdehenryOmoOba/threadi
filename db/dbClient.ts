@@ -5,7 +5,10 @@ import "dotenv/config"
 
 
 export const  dbClient = new Pool({
-  connectionString: process.env.DB_URL
+  connectionString: process.env.DB_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
 })
 
 async function main() {
