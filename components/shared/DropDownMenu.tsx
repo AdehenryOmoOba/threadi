@@ -3,6 +3,7 @@ import {RiExpandUpDownLine} from "react-icons/ri"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu,DropdownMenuContent,DropdownMenuTrigger} from "@/components/ui/dropdown-menu"
 import Image from "next/image"
+import defaultProfilePhoto from "../../public/assets/user.svg"
 
 
 export function DropdownMenuCheckboxes({profileImage}: {profileImage: string}) {
@@ -11,7 +12,10 @@ export function DropdownMenuCheckboxes({profileImage}: {profileImage: string}) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="w-max h-12 rounded-lg ml-4">
         <Button  className="flex gap-4 bg-black text-slate-400">
-          <Image src={profileImage} alt="profile photo" width={24} height={24} className="rounded-full"/>
+          <div className="relative h-6 w-6 rounded-full">
+            {/* <Image src={profileImage || defaultProfilePhoto} alt="profile photo" fill className="rounded-full"/> */}
+            <Image src={profileImage || defaultProfilePhoto} alt="profile photo" fill className="rounded-full" />
+          </div>
           <p className="hidden md:inline-block text-[14px]">Personal Organisations</p>
           <RiExpandUpDownLine />
         </Button>

@@ -38,8 +38,10 @@ function ThreadiCard({id,currentUser, content, authorId,authorName,authorImage,c
       <div className='flex items-start justify-between'>
         <div className='flex w-full flex-1 flex-row gap-4'>
           <div className='flex flex-col items-center'>
-            <Link  href={`/profile/${authorId}?${isCurrentUser ? `current_user=${authorName}` : ""}`} className='relative h-11 w-11'>
-              <Image src={authorImage} alt="profile image" fill className='cursor-pointer rounded-full'/>
+            <Link  href={`/profile/${authorId}?${isCurrentUser ? `current_user=${authorName}` : ""}`} className='relative h-11 w-11 overflow-hidden'>
+              <div className='relative rounded-full h-11 w-11 overflow-hidden'>
+                <Image src={authorImage} alt="profile image" fill className='cursor-pointer rounded-full object-fill'/>
+              </div>
             </Link>
             <div className='thread-card_bar' />
           </div>

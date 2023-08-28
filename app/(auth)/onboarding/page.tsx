@@ -3,7 +3,7 @@ import AccountProfile from '@/components/forms/AccountProfile'
 import { getServerSession } from 'next-auth'
 import { redirect } from 'next/navigation'
 import React from 'react'
-import defaultImage from "../../../public/assets/profile.svg"
+import defaultImage from "../../../public/assets/user.svg"
 import HeadText from '@/components/shared/HeadText'
 
 

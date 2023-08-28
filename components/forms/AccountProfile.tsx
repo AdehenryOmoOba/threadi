@@ -8,13 +8,13 @@ import { UserValidationSchema } from '@/lib/validations'
 import * as z from "zod";
 import { Button } from '../ui/button'
 import Image from 'next/image'
-import defaultProfilePhoto from "../../public/assets/profile.svg"
+import defaultProfilePhoto from "../../public/assets/user.svg"
 import { Textarea } from '../ui/textarea'
 import { isBase64Image, updateUser } from '@/lib/utils'
 import { useUploadThing } from '@/lib/uploadthing'
 import { usePathname, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
-import defaultImage from "../../public/assets/profile.svg"
+import defaultImage from "../../public/assets/user.svg"
 
 
 interface AccountProfileProps {
@@ -82,9 +82,11 @@ function AccountProfile({user}: AccountProfileProps) {
       const imageUrl = e.target?.result?.toString() || ""
       fieldChange(imageUrl)
     }
-
     fileReader.readAsDataURL(fileObject)
   }
+
+  console.log({defaultImage})
+  console.log({defaultProfilePhoto})
 
 
   return (
@@ -98,9 +100,12 @@ function AccountProfile({user}: AccountProfileProps) {
             <FormItem className='flex items-center gap-4'>
               <FormLabel className='account-form_image-label'>
                 {field.value ? 
-                   (<Image src={field.value} alt='profile photo' width={96} height={96} priority className='rounded-full object-contain' />) 
-                 : (<Image src={defaultProfilePhoto} alt='default profile photo' width={24} height={24} className='object-contain' />)
-                }
+                   (<div className='relative w-20 h-20 rounded-full'>
+                     <Image src={field.value} alt='profile photo' fill priority className='rounded-full object-contain' />) 
+                   </div>)
+                 : (<div className='relative w-20 h-20 rounded-full'>
+                     <Image src={defaultImage} alt='default profile photo' fill className='rounded-full object-contain' />
+                   </div>)}
               </FormLabel>
               <FormControl className='flex-1 text-base-semibold text-gray-200'>
                 <Input onChange={(e) => handleImage(e, field.onChange)} type='file' accept='image/*' placeholder="Upload a photo" className='account-form_image-input'/>

@@ -3,7 +3,7 @@ import ProfileHeader from '@/components/shared/ProfileHeader'
 import { findUser } from '@/lib/utils'
 import { getServerSession } from 'next-auth'
 import {redirect} from "next/navigation"
-import defaultProfilePic from "../../../../public/assets/profile.svg" 
+import defaultProfilePic from "../../../../public/assets/user.svg" 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { profileTabs } from '@/constants'
 import Image from 'next/image'

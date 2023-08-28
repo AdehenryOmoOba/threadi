@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { CommentValidationSchema } from '@/lib/validations'
 import {z} from "zod"
 import Image from 'next/image'
-import defaultProfileImage from "../../public/assets/profile.svg"
+import defaultProfileImage from "../../public/assets/user.svg"
 import { createCommentReply } from '@/lib/utils'
 import { useSession } from 'next-auth/react'
 
@@ -50,9 +50,9 @@ function CommentBox({threadId, currentUser}: CommentProp) {
           name="thread"
           render={({ field }) => (
             <FormItem className='flex gap-3 w-full items-center'>
-              <FormLabel>
-                <Image src={data?.user?.image || defaultProfileImage} alt='profile image' height={48} width={48} className='rounded-full object-cover'/>
-              </FormLabel>
+              <div className='relative h-10 w-12 rounded-full'>
+                <Image src={data?.user?.image || defaultProfileImage} alt='profile image' fill className='rounded-full'/>
+              </div>
               <FormControl className='border-none bg-transparent'>
                 <Input {...field} type='text' placeholder='Comment...' className='no-focus text-light-1 outline-none'/>
               </FormControl>
