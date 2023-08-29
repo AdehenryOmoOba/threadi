@@ -7,7 +7,7 @@ import { HiOutlineLogin } from 'react-icons/hi'
 function LoginButton() {
   const router = useRouter()
   return (
-    <Button onClick={() => router.push("/login")} className='bg-transparent rounded-lg text-[24px] text-slate-500'>
+    <Button onClick={() => router.push("/login")} className='bg-transparent rounded-lg text-[24px] text-slate-300'>
       <HiOutlineLogin />
     </Button>
   )

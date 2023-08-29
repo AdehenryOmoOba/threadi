@@ -1,8 +1,10 @@
 import type { Config } from "drizzle-kit";
 import "dotenv/config"
- 
+
+console.log("connection string from drizzle.confis.ts file: ", process.env.DB_URL)
+
 export default {
-  schema: "./src/schema/*",
+  schema: "./db/schema.ts",
   out: "./drizzle",
   driver: 'pg',
   dbCredentials: {

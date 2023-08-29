@@ -23,7 +23,7 @@ export default async function Home() {
     <>
      {/* <h1 className="head-text">Home Page 👋</h1> */}
      <HeadText content='Home' />
-     <section className="mt-9 flex flex-col gap-10">
+     <section className="mt-9 flex flex-col gap-5">
       {
         !threadis?.length ? (
           <p className="no-result">No threads to display 😐</p>

@@ -5,6 +5,11 @@
 body {
   user-zoom: fixed;
   user-select: none;
+  min-height: 100vh;
+  min-height: 100dvh;
+  width: 100vw;
+  width: 100dvw;
+  background: rgb(0, 0, 0);
 }
 
 @layer components {

@@ -1,22 +1,14 @@
-import { NodePgClient, drizzle } from "drizzle-orm/node-postgres";
-import { Client, Pool, } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
+import { Pool} from "pg";
 import * as databaseSchema from "./schema"
 import "dotenv/config"
 
 
-export const  dbClient = new Pool({
+export const  pool = new Pool({
   connectionString: process.env.DB_URL,
-  ssl: {
-    rejectUnauthorized: false
-  }
+  // ssl: {
+  //   rejectUnauthorized: false
+  // }
 })
 
-async function main() {
-  await dbClient.connect()
-} 
-
-main()
-.then(() => console.log("Connection to Database successful"))
-.catch((error) => console.log("Database connection error: ", error.message))
-
-export const db = drizzle(dbClient, {schema: databaseSchema})
+export const db = drizzle(pool, {schema: databaseSchema})

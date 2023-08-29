@@ -7,6 +7,7 @@
     "migration:generate": "drizzle-kit generate:pg --schema=./db/schema.ts",
     "migration:push": "node -r esbuild-register db/migrate.ts",
     "migrate": "drizzle-kit generate:pg --schema=./db/schema.ts && node -r esbuild-register db/migrate.ts",
+    "drizzle-studio": "drizzle-kit studio --port 3333",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
