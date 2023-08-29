@@ -1,4 +1,4 @@
-import { db, dbClient } from "@/db/dbClient"
+import { db } from "@/db/dbClient"
 import { users } from "@/db/schema"
 import origin from "@/lib/utils"
 import { eq } from "drizzle-orm"

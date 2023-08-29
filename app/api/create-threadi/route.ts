@@ -1,4 +1,4 @@
-import { db, dbClient } from "@/db/dbClient";
+import { db } from "@/db/dbClient";
 import { threadis, users } from "@/db/schema";
 import { NewThreadInfo } from "@/lib/utils";
 import { revalidatePath } from "next/cache";

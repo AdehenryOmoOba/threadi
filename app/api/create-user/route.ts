@@ -1,4 +1,4 @@
-import { db, dbClient } from "@/db/dbClient";
+import { db } from "@/db/dbClient";
 import { users } from "@/db/schema";
 import { NextRequest } from "next/server";
 import { NextResponse } from 'next/server'

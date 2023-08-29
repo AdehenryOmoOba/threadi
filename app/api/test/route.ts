@@ -1,4 +1,4 @@
-import { db, dbClient } from "@/db/dbClient";
+import { db } from "@/db/dbClient";
 import { commentsReplies, communities, test, threadis, users } from "@/db/schema";
 import { asc, desc, eq, isNotNull, isNull, ne, not, sql } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";

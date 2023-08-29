@@ -1,4 +1,4 @@
-import { db, dbClient } from "@/db/dbClient";
+import { db } from "@/db/dbClient";
 import { threadis } from "@/db/schema";
 import { threadisCleanUp } from "@/lib/utils";
 import { sql} from "drizzle-orm";
