@@ -1,5 +1,4 @@
 *** Modification branch ***
-
 - To create a new NextJS project with typescript using pnpm, create the project directory, open the prodect directory with vscode, open the terminal and run cammand:  "pnpm create next-app ./ --template typescript"
 - Install postgres, drizzle and esbuid-register with commands:
    1. pnpm add drizzle-orm pg dotenv
