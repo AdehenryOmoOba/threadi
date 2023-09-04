@@ -279,7 +279,9 @@ export async function finUserThreadsAndComments(userId: string) {
 export async function fetchUserActivities(userId: string) {
     
   try {
-    const response = await fetch(`${origin}api/fetch-user-activities?id=${userId}`)
+    const response = await fetch(`${origin}api/fetch-user-activities?id=${userId}`, {
+      cache: "no-store"
+    })
 
     const userActivities: USerActivities[] = await response.json() 
 
