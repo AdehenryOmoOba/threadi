@@ -1,6 +1,4 @@
 import { db } from "@/db/dbClient";
-import { threadis } from "@/db/schema";
-import { threadisCleanUp } from "@/lib/utils";
 import { sql} from "drizzle-orm";
 import { NextRequest } from "next/server";
 import { NextResponse } from 'next/server'
@@ -17,27 +15,19 @@ export async function GET(req: NextRequest){
   
     try {
 
-        
-
         const response = await db.execute(sql.raw(topThreadisSql(skip, pageSize)))
 
-        const threads = threadisCleanUp(response.rows)
+        const threads = response.rows[0].top_threads as unknown[]
+
+        const topThreadCount = response.rows[0].top_threadis_count as number
+
+        if(!threads.length) throw new Error("no threadis found")
   
-        if(!threads) throw new Error("no threadis found")
-  
-        const preparedCount = db.select({count: sql<number>`count(*)`})
-        .from(threadis)
-        .prepare("prepared_count")
-  
-        const threadisCount = await preparedCount.execute()
-  
-        const isNext = threadisCount[0].count > skip + response.rowCount
+        const isNext = topThreadCount > skip + threads.length
   
         return NextResponse.json({threads, isNext})
   
     } catch (error: any) {
         return NextResponse.json({error: error.message,},{status: 501})
-    } finally {
-        // 
-    }
+    } 
 }

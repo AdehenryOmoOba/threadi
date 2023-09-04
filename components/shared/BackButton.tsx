@@ -24,7 +24,7 @@ function BackButton() {
   if(routeMaps.has(path) || isCurrentUser) return null
 
   return (
-    <div className='w-full h-max mb-4 max-w-[900px]'>
+    <div className='absolute h-max mb-4 w-[90%] max-w-[900px]  left-1/2 -translate-x-1/2'>
       <button onClick={() => router.back()} className='text-light-3 text-heading3-bold'>
         <MdOutlineKeyboardBackspace />
       </button>

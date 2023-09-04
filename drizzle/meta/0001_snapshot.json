@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "f671cde9-e15c-4f26-a192-b492d12c0262",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "66e7b3c8-6f5b-415e-85c7-18e70d8bb084",
+  "prevId": "f671cde9-e15c-4f26-a192-b492d12c0262",
   "tables": {
     "communities": {
       "name": "communities",
@@ -126,6 +126,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
+        },
+        "reply_count": {
+          "name": "reply_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         }
       },
       "indexes": {},

@@ -12,7 +12,7 @@ type Props = {
 
 function ProfileHeader({currentUserId, profileUserId, name, userHandle, imgUrl, bio}: Props) {
   return (
-    <div className='flex w-full flex-col justify-start'>
+    <div className='flex w-full flex-col justify-start pt-12'>
         <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
                 <div className='relative h-20 w-20 object-cover'>

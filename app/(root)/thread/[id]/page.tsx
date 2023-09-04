@@ -1,48 +1,49 @@
 import ThreadiCard from '@/components/cards/ThreadiCard'
 import CommentBox from '@/components/forms/Comment'
-import { getComments } from '@/lib/utils'
+import { getThredAndReplies } from '@/lib/utils'
 import React from 'react'
 
 
 type Props = {
-  params: {id: string}, 
-  searchParams: {user: string, table: string}
-
+  params: {id: string},
+  searchParams: {
+    user: string
+  }
 }
 
-async function page({params: {id}, searchParams: {user, table}}: Props) {
+async function page({params: {id}, searchParams: {user}}: Props) {
   
-  const tacr = await getComments(id, table)
+  const tacr = await getThredAndReplies(id)
 
   if(!tacr) return null
 
   return (
-    <section className='relative'>
+    <section className='relative mt-10'>
       <div>
       <ThreadiCard
-       key={tacr.uuid}
-       id={tacr.uuid}
+       id={tacr.thread_uuid}
        currentUser={user}
-       content={tacr.text}
-       authorId={tacr.author}
+       content={tacr.thread_text}
+       authorId={tacr.thread_author_uuid}
        authorImage={tacr.thread_author_image}
        authorName={tacr.thread_author_name}
-       communityId={tacr.community?.uuid}
-       communityName={tacr.community?.name}
-       communityImage={tacr.community?.image}
-       createdAt={tacr.created_at}
-       commentsCount={tacr.replies_count}
+       communityId={tacr.parent_community_uuid || undefined}
+       communityName={tacr.thread_community_name || undefined}
+       communityImage={tacr.thread_community_image || undefined}
+       createdAt={tacr.thread_created_at}
+       authorEmail={tacr.thread_author_email}
+       commentsCount={tacr.thread_reply_count}
        linkDisabled={true}
        />
       </div>
 
       <div className='mt-7'>
-        <CommentBox threadId={id} currentUser={user} />
+        <CommentBox threadId={tacr.thread_uuid} />
       </div>
 
       <div className='mt-10'>
-        {
-          tacr.replies?.map((child) => (
+        { tacr.comments[0] &&
+          tacr.comments?.map((child) => (
             <ThreadiCard
             key={child.comment_uuid}
             id={child.comment_uuid}
@@ -52,7 +53,8 @@ async function page({params: {id}, searchParams: {user, table}}: Props) {
             authorImage={child.comment_author_image}
             authorName={child.comment_author_name}
             createdAt={child.comment_created_at}
-            commentsCount={Number(child.replies_count)}
+            commentsCount={Number(child.comment_reply_count)}
+            authorEmail={child.comment_author_email}
             isComment={true}
             />
           ))

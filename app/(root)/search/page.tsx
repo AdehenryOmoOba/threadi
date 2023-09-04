@@ -15,7 +15,6 @@ async function page() {
   
   return (
     <section>
-      {/* <h1 className='head-text mb-10'>Search</h1> */}
       <HeadText content='Search' />
     
       {/* TODO: Search bar  */}
@@ -23,7 +22,7 @@ async function page() {
       <div className="mt-14 flex flex-col gap-9">
         {users && !users.length && (<p className='no-result'>No users</p>)}
         {users && users.map((user) => (
-            <UserCard key={user.uuid} userType='user' id={user.uuid} name={user.name} imgUrl={user.image} userhandle={`@${user.email.split("@")[0]}`} />
+            <UserCard key={user.uuid} userType='user' id={user.uuid} name={user.name} imgUrl={user.image} email={user.email}  />
           ))}
       </div>
 
