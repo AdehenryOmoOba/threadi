@@ -89,11 +89,11 @@ export const authOptions: NextAuthOptions = {
 
           const user = await db.query.users.findFirst({where: eq(users.email, credentials.email)})
 
-          
+          if(!user) return null
 
-          if(!user || !user.password) return null
+          // const isPasswordMatch = await bcrypt.compare(credentials.password, user?.password)
 
-          const isPasswordMatch = await bcrypt.compare(credentials.password, user?.password)
+          const isPasswordMatch = credentials.password === user?.password
 
           if(!isPasswordMatch) return null
 

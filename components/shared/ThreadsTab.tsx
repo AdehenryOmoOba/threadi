@@ -1,44 +1,39 @@
-import { finUserThreadsAndComments } from '@/lib/utils'
 import React from 'react'
 import ThreadiCard from '../cards/ThreadiCard'
+import defaultProfileImg from "@/public/assets/user.svg"
 
-type UserThreadsAndComments = {
-  thread_uuid: string
-  thread_text: string
-  thread_created_at: string
-  thread_author: {
-    author_name: string
-    author_image: string
-    author_uuid: string
-  }
-  comments: 
-    {
-      comment_uuid: string
-      comment_author: {
-        name: string
-        image: string
-        uuid: string
-      }
-    }[]
-  replies_count: number
-}[]
+
+type TopThreads = {
+  uuid: string;
+  text: string;
+  author: string;
+  community: string | null;
+  created_at: string;
+  likes: string[] | null;
+  reposts: string[] | null;
+  shares_count: number;
+  views_count: number;
+  parent_id: string | null;
+  reply_count: number;
+}[] | null
 
 
 type Props = {
   currentUserId: string | undefined
   profileUserId: string
   accountType: "user" | "community"
+  topThreads?: TopThreads
+  profileName: string,
+  profileEmail: string
+  profile_image: string | undefined
 }
 
-export default async function ThreadsTab({accountType, profileUserId, currentUserId}: Props) {
+export default async function ThreadsTab({currentUserId, topThreads, profileName, profileEmail, profile_image}: Props) {
 
-  const userThreadsAndComments: UserThreadsAndComments = await finUserThreadsAndComments(profileUserId)
-
-    // TODO: fetch profile threads 
   return (
     <section className='mt-9 flex flex-col gap-10'>
-      {userThreadsAndComments.map(({comments,replies_count,thread_author,thread_created_at,thread_text,thread_uuid}) => (
-        <ThreadiCard key={thread_uuid} id={thread_uuid} authorId={thread_author.author_uuid} currentUser={currentUserId} content={thread_text} createdAt={thread_created_at} commentsCount={replies_count} authorName={thread_author.author_name} authorImage={thread_author.author_image} comments={comments}/>
+      {topThreads && topThreads.map(({uuid, author, text, created_at, reply_count}) => (
+        <ThreadiCard key={uuid} id={uuid} authorId={author} currentUser={currentUserId} content={text} createdAt={created_at} commentsCount={reply_count} authorName={profileName} authorEmail={profileEmail} authorImage={profile_image || defaultProfileImg} />
       ))}
     </section>
   )

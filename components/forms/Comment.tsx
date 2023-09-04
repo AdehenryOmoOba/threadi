@@ -1,6 +1,6 @@
 "use client"
 import React from 'react'
-import { Form ,FormField, FormItem, FormLabel, FormControl } from '@/components/ui/form'
+import { Form ,FormField, FormItem, FormControl } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { usePathname, useRouter } from 'next/navigation'
@@ -10,16 +10,15 @@ import { CommentValidationSchema } from '@/lib/validations'
 import {z} from "zod"
 import Image from 'next/image'
 import defaultProfileImage from "../../public/assets/user.svg"
-import { createCommentReply } from '@/lib/utils'
+import { createThreadi } from '@/lib/utils'
 import { useSession } from 'next-auth/react'
 
 
 type CommentProp = {
   threadId: string
-  currentUser: string
 }
 
-function CommentBox({threadId, currentUser}: CommentProp) {
+function CommentBox({threadId}: CommentProp) {
     const pathname = usePathname()
     const {data} = useSession()
     const router = useRouter()
@@ -32,11 +31,10 @@ function CommentBox({threadId, currentUser}: CommentProp) {
     })
   
     const onSubmit = async (values: z.infer<typeof CommentValidationSchema>) => {
-      console.log({text: values.thread, author: currentUser, path: pathname, parentId: threadId})
-      await createCommentReply({text: values.thread, author: currentUser, path: pathname, parentId: threadId})
+      console.log({text: values.thread, path: pathname, parentId: threadId})
+      data?.user?.pgUUID && await createThreadi({text: values.thread, author: data.user.pgUUID, path: pathname, parentId: threadId})
       form.reset()
       router.refresh()
-
     }
 
     if(!data) return null

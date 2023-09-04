@@ -1,11 +1,33 @@
+import ThreadiCard from '@/components/cards/ThreadiCard'
 import HeadText from '@/components/shared/HeadText'
+import { fetchUserActivities } from '@/lib/utils'
+import Image from 'next/image'
+import Link from 'next/link'
 import React from 'react'
 
-function page() {
+async function page({searchParams: {user_id, profile_image,profile_name,profile_email}}: {searchParams: {user_id: string, profile_image: string,profile_name: string,profile_email: string}}) {
+
+  if(!user_id) return null
+
+  const activities =  await fetchUserActivities(user_id)
+
   return (
     <section>
-      {/* <h1 className='head-text mb-10'>Activity</h1> */}
       <HeadText content='Activity' />
+      <section className='mt-10 flex flex-col gap-5'>
+      {!!activities?.length ? (activities.map((activity) => (
+      <div key={activity.comment_author_id} className='w-full'>
+        <article className='activity-card'>
+          <Link className='w-full flex gap-x-2' href={`/thread/${activity.comment_parent_id}?user=${user_id}`}>
+            <Image src={activity.comment_author_image} alt='profile picture' width={20} height={20} className='rounded-full object-cover' />
+            <p className='!text-small-regular text-light-1'><span className='mr-1 text-primary-500'>{activity.comment_author_name}</span> replied to your thread</p>
+          </Link>
+          <ThreadiCard authorEmail={profile_email} authorId={user_id} authorImage={profile_image} authorName={profile_name} isComment id={user_id} content={activity.parent_thread_text} createdAt={activity.parent_thread_created_at} currentUser={user_id} commentsCount={0} isSUbThread/>
+        </article>
+      </div>)))
+      : (<p className='!text-base-regular text-light-3'>You currently have no activity</p>)}
+      </section>
+
     </section>
   )
 }

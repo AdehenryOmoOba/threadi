@@ -1,181 +1,128 @@
 import type {FetchUsers} from "../../lib/utils"
 
 export const topThreadisSql = (offset: number, limit: number) => (`
-SELECT
-    t.uuid AS thread_uuid,
-    t.text AS thread_text,
-    t.author,
-    t.community,
-    t.created_at,
-    t.likes,
-    t.reposts,
-    t.shares_count,
-    t.views_count,
-    json_build_object(
-        'author_uuid', tu.uuid,
-        'author_name', tu.name,
-        'author_image', tu.image,
-        'author_bio', tu.bio,
-        'author_onboarded', tu.onboarded
-    ) AS thread_author,
-    COALESCE(
-        json_agg(json_build_object(
-            'comment_uuid', c.uuid,
-            'comment_text', c.text,
-            'user_uuid', cu.uuid,
-            'user_name', cu.name,
-            'user_image', cu.image,
-            'user_bio', cu.bio,
-            'user_onboarded', cu.onboarded
-        )),
-        '[]'::json
-    ) AS comments,
-    c2.uuid AS community_uuid,
-    c2.name AS community_name,
-    c2.image AS community_image
-FROM
-    threadis t
-LEFT JOIN
-    comments_replies c ON t.uuid = c.parent_id
-LEFT JOIN
-    users cu ON c.author = cu.uuid
-LEFT JOIN
-    users tu ON t.author = tu.uuid
-LEFT JOIN
-    communities c2 ON t.community = c2.uuid
-GROUP BY
-    t.uuid, t.text, tu.uuid, tu.name, tu.image, tu.bio, tu.onboarded,
-    c2.uuid, c2.name, c2.image
-ORDER BY
-    t.created_at DESC
-LIMIT
-    ${limit}
-OFFSET
-    ${offset};
-
-`)
-
-///////////////
-
-export const commentsRepliesSql = (parentId: string, table: string) => (`
-WITH RecursiveComments AS (
+WITH ThreadData AS (
     SELECT
-        cr.uuid AS comment_uuid,
-        cr.text AS comment_text,
-        cr.parent_id AS comment_parent_id,
-        cr.created_at AS comment_created_at,
-        u.name AS comment_author_name,
-        u.image AS comment_author_image,
-        u.uuid AS comment_author_uuid,
-        COUNT(cr2.uuid) AS replies_count
-    FROM
-        comments_replies cr
-    JOIN
-        users u ON cr.author = u.uuid
-    LEFT JOIN
-        comments_replies cr2 ON cr.uuid = cr2.parent_id
-    WHERE
-        cr.parent_id = '${parentId}'
-    GROUP BY
-        cr.uuid, cr.text, cr.parent_id, cr.created_at, u.name, u.image, u.uuid
-    ORDER BY
-        cr.created_at DESC
-)
-SELECT
-    tc.*,
-    tu.name AS thread_author_name,
-    tu.image AS thread_author_image,
-    json_agg(json_build_object(
-        'comment_uuid', rc.comment_uuid,
-        'comment_text', rc.comment_text,
-        'comment_parent_id', rc.comment_parent_id,
-        'comment_created_at', rc.comment_created_at,
-        'comment_author_name', rc.comment_author_name,
-        'comment_author_image', rc.comment_author_image,
-        'comment_author_uuid', rc.comment_author_uuid,
-        'replies_count', rc.replies_count
-    )) FILTER (WHERE rc.comment_uuid IS NOT NULL) AS replies
-FROM
-    ${table} tc
-LEFT JOIN
-    RecursiveComments rc ON tc.uuid = rc.comment_parent_id
-LEFT JOIN
-    users tu ON tc.author = tu.uuid
-WHERE
-    tc.uuid = '${parentId}'
-GROUP BY
-    tc.uuid, tc.text, tc.author, tc.community, tc.created_at, tu.name, tu.image;
-    `);
-
-//////////////////////
-
-export const userThreadsAndCooments = (userId: string) => (`
-WITH ThreadComments AS (
-    SELECT
-        t.uuid AS thread_uuid,
-        t.text AS thread_text,
-        t.author AS thread_author_id,
-        u.name AS thread_author_name,
-        u.image AS thread_author_image,
-        u.uuid AS thread_author_uuid,
-        t.created_at AS thread_created_at,
-        c.uuid AS comment_uuid,
-        c.text AS comment_text,
-        c.author AS comment_author_id,
-        cu.name AS comment_author_name,
-        cu.image AS comment_author_image,
-        cu.uuid AS comment_author_uuid,
-        c.created_at AS comment_created_at
+        t.*,
+        u.name AS author_name,
+        u.email AS author_email,
+        u.image AS author_image,
+        c.name AS community_name,
+        c.image AS community_image,
+        COUNT(r.uuid) AS replies_count
     FROM
         threadis t
     LEFT JOIN
-        comments_replies c ON t.uuid = c.parent_id
-    LEFT JOIN
+        threadis r ON t.uuid = r.parent_id
+    JOIN
         users u ON t.author = u.uuid
     LEFT JOIN
-        users cu ON c.author = cu.uuid
+        communities c ON t.community = c.uuid
     WHERE
-        t.author = '${userId}'
+        t.parent_id IS NULL
+    GROUP BY
+        t.uuid, t.text, t.author, u.uuid, u.name, u.email, u.image, t.community, t.created_at, t.likes, t.reposts, t.shares_count, t.views_count, c.name, c.image
+    ORDER BY
+        t.created_at DESC
+    LIMIT ${limit}
+    OFFSET ${offset}
 )
 SELECT
-    thread_uuid,
-    thread_text,
-    json_build_object(
-        'author_name', thread_author_name,
-        'author_image', thread_author_image,
-        'author_uuid', thread_author_uuid
-    ) AS thread_author,
-    thread_created_at,
-    json_agg(json_build_object(
-        'comment_uuid', comment_uuid,
-        'comment_author', json_build_object(
-            'name', comment_author_name,
-            'image', comment_author_image,
-            'uuid', comment_author_uuid
-        )
-    ) ORDER BY comment_created_at DESC) AS comments
-FROM
-    ThreadComments
-GROUP BY
-    thread_uuid, thread_text, thread_author_name, thread_author_image, thread_author_uuid, thread_created_at
-ORDER BY thread_created_at DESC;
+    (SELECT json_agg(thread) FROM (SELECT * FROM ThreadData) thread) AS top_threads,
+    (SELECT total_count FROM threadis_count) AS top_threadis_count;
 
 `)
 
-export const userAndThreadCount = (userId: string) => (`
+export const threadAndReplies = (threadId: string) => (`
+WITH ThreadData AS (
+    SELECT
+    t.uuid AS thread_uuid,
+    t.text AS thread_text,
+    t.created_at AS thread_created_at,
+    t.likes AS thread_likes,
+    t.reposts AS thread_reposts,
+    t.shares_count AS thread_shares_count,
+    t.author AS thread_author_uuid,
+    t.views_count AS thread_views_count,
+    t.reply_count AS thread_reply_count,
+    u.name AS thread_author_name,
+    u.email AS thread_author_email,
+    u.image AS thread_author_image,
+    t.community AS thread_community_uuid
+    FROM
+        threadis t
+    LEFT JOIN
+        users u ON t.author = u.uuid
+    WHERE
+        t.uuid = '${threadId}'
+)
 SELECT
-    u.*,
-    CAST(COUNT(t.uuid) AS INTEGER) AS thread_count
+    td.*,
+    json_agg(cmnts.*) AS comments,
+    CASE
+        WHEN td.thread_community_uuid IS NOT NULL THEN com.name
+        ELSE NULL
+    END AS thread_community_name,
+    CASE
+        WHEN td.thread_community_uuid IS NOT NULL THEN com.image
+        ELSE NULL
+    END AS thread_community_image
 FROM
-    users u
-LEFT JOIN
-    threadis t ON u.uuid = t.author
-WHERE
-    u.uuid = '${userId}'
+    ThreadData td
+LEFT JOIN (
+    SELECT
+    t.uuid AS comment_uuid,
+    t.text AS comment_text,
+    t.reply_count AS comment_reply_count,
+    t.created_at AS comment_created_at,
+    t.likes AS comment_likes,
+    t.reposts AS comment_reposts,
+    t.shares_count AS comment_shares_count,
+    t.views_count AS comment_views_count,
+    u.name AS comment_author_name,
+    u.email AS comment_author_email,
+    u.image AS comment_author_image,
+    u.uuid AS comment_author_uuid
+    FROM
+        threadis t
+    LEFT JOIN
+        users u ON t.author = u.uuid
+    WHERE
+        t.parent_id = '${threadId}'
+    ORDER BY
+        t.created_at DESC
+) cmnts ON TRUE
+LEFT JOIN communities com ON com.uuid = td.thread_community_uuid
 GROUP BY
-    u.uuid;
-`) 
+    td.thread_uuid, td.thread_text, td.thread_created_at, td.thread_likes, td.thread_reposts,
+    td.thread_shares_count, td.thread_views_count,thread_author_uuid, td.thread_author_name, td.thread_author_email,
+    td.thread_author_image,thread_reply_count, td.thread_community_uuid, com.name, com.image;
 
+`);
+
+export const userThreadsAndCooments = (userId: string) => (`
+SELECT
+    (SELECT bio FROM users WHERE uuid = '${userId}') AS user_bio,
+    json_agg(json_build_object(
+        'uuid', uuid,
+        'text', text,
+        'author', author,
+        'community', community,
+        'created_at', created_at,
+        'likes', likes,
+        'reposts', reposts,
+        'shares_count', shares_count,
+        'views_count', views_count,
+        'reply_count', reply_count,
+        'parent_id', parent_id
+    ) ORDER BY created_at DESC) AS user_threads
+FROM
+    threadis
+WHERE
+    parent_id IS NULL
+    AND author = '${userId}';
+
+`)
 
 export const fetchAllUsers = ({searchString, pageNumber, pageSize, sortBy, userId}: FetchUsers) => {
 
@@ -228,6 +175,34 @@ export const fetchAllUsers = ({searchString, pageNumber, pageSize, sortBy, userI
     `
     return userId === undefined ? withoutUserId : withUserId
 }
+
+export const fetchUserActivities = (userId: string) => (`
+SELECT
+    t.author AS comment_author_id,
+    u.name AS comment_author_name,
+    u.email AS comment_author_email,
+    u.image AS comment_author_image,
+    t.created_at AS comment_created_at,
+    t.parent_id AS comment_parent_id,
+    parent.text AS parent_thread_text,
+    parent.created_at AS parent_thread_created_at
+FROM
+    threadis t
+LEFT JOIN
+    users u ON t.author = u.uuid
+LEFT JOIN
+    threadis parent ON t.parent_id = parent.uuid -- Join with parent thread
+WHERE
+    t.parent_id IS NOT NULL
+    AND (
+        SELECT author
+        FROM threadis parent
+        WHERE parent.uuid = t.parent_id
+    ) = '${userId}'
+    AND t.author != '${userId}' -- Exclude comments authored by the specified UUID
+ORDER BY
+    t.created_at DESC;
+`)
 
 
 

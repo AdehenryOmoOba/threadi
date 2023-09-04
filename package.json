@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "migration:introspect": "drizzle-kit introspect:pg --config=./db/config.ts",
+    "migration:introspect": "drizzle-kit introspect:pg --config=drizzle.config.ts",
     "migration:generate": "drizzle-kit generate:pg --schema=./db/schema.ts",
     "migration:push": "node -r esbuild-register db/migrate.ts",
     "migrate": "drizzle-kit generate:pg --schema=./db/schema.ts && node -r esbuild-register db/migrate.ts",

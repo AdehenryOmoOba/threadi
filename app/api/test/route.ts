@@ -1,61 +1,184 @@
 import { db } from "@/db/dbClient";
-import { commentsReplies, communities, test, threadis, users } from "@/db/schema";
-import { asc, desc, eq, isNotNull, isNull, ne, not, sql } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 import { NextResponse } from 'next/server'
-import { commentsRepliesSql, topThreadisSql, userAndThreadCount, userThreadsAndCooments } from "../sql";
-import { commentsRepliesCleanUp, threadisCleanUp, userThreadsAndCoomentsCleanUp } from "@/lib/utils"
-import { QueryResult } from "pg";
-
-
 
 
 export async function GET(){
 
     try {
         
-///////////////////////////////////////////////////
-        // const result = await db.query.threadis.findMany()
+        ///////////////////////////////////////////////////////////////////
+        // Retrieves top threads and replies count for home page
+        // const result = await db.execute(sql.raw(`
+        // WITH ThreadData AS (
+        //     SELECT
+        //         t.*,
+        //         u.name AS author_name,
+        //         u.email AS author_email,
+        //         u.image AS author_image,
+        //         c.name AS community_name,
+        //         c.image AS community_image,
+        //         COUNT(r.uuid) AS replies_count
+        //     FROM
+        //         threadis t
+        //     LEFT JOIN
+        //         threadis r ON t.uuid = r.parent_id
+        //     JOIN
+        //         users u ON t.author = u.uuid
+        //     LEFT JOIN
+        //         communities c ON t.community = c.uuid
+        //     WHERE
+        //         t.parent_id IS NULL
+        //     GROUP BY
+        //         t.uuid, t.text, t.author, u.uuid, u.name, u.email, u.image, t.community, t.created_at, t.likes, t.reposts, t.shares_count, t.views_count, c.name, c.image
+        //     ORDER BY
+        //         t.created_at DESC
+        //     LIMIT 25
+        //     OFFSET 0
+        // )
+        // SELECT
+        //     (SELECT json_agg(thread) FROM (SELECT * FROM ThreadData) thread) AS top_threads,
+        //     (SELECT total_count FROM threadis_count) AS top_threadis_count;
+        
+        // `))
 
-        // const result = await db.insert(threadis).values({text: "biolosjhddie", author: "9b0553eb-fe29-4cdd-b566-f4fb86d22f09", community: null}).returning()
+        // Retrieves a thread and all it's comments/replies 
+         const result = await db.execute(sql.raw(`
+           WITH ThreadData AS (
+               SELECT
+               t.uuid AS thread_uuid,
+               t.text AS thread_text,
+               t.created_at AS thread_created_at,
+               t.likes AS thread_likes,
+               t.reposts AS thread_reposts,
+               t.shares_count AS thread_shares_count,
+               t.author AS thread_author_uuid,
+               t.views_count AS thread_views_count,
+               t.reply_count AS thread_reply_count,
+               u.name AS thread_author_name,
+               u.email AS thread_author_email,
+               u.image AS thread_author_image,
+               t.community AS thread_community_uuid
+               FROM
+                   threadis t
+               LEFT JOIN
+                   users u ON t.author = u.uuid
+               WHERE
+                   t.uuid = '8943a991-5b3a-4345-bb93-52fa2e19edaa'
+           )
+           SELECT
+               td.*,
+               json_agg(cmnts.*) AS comments,
+               CASE
+                   WHEN td.thread_community_uuid IS NOT NULL THEN com.name
+                   ELSE NULL
+               END AS thread_community_name,
+               CASE
+                   WHEN td.thread_community_uuid IS NOT NULL THEN com.image
+                   ELSE NULL
+               END AS thread_community_image
+           FROM
+               ThreadData td
+           LEFT JOIN (
+               SELECT
+               t.uuid AS comment_uuid,
+               t.text AS comment_text,
+               t.reply_count AS comment_reply_count,
+               t.created_at AS comment_created_at,
+               t.likes AS comment_likes,
+               t.reposts AS comment_reposts,
+               t.shares_count AS comment_shares_count,
+               t.views_count AS comment_views_count,
+               u.name AS comment_author_name,
+               u.email AS comment_author_email,
+               u.image AS comment_author_image,
+               u.uuid AS comment_author_uuid
+               FROM
+                   threadis t
+               LEFT JOIN
+                   users u ON t.author = u.uuid
+               WHERE
+                   t.parent_id = '8943a991-5b3a-4345-bb93-52fa2e19edaa'
+                ORDER BY
+                   t.created_at DESC
+           ) cmnts ON TRUE
+           LEFT JOIN communities com ON com.uuid = td.thread_community_uuid
+           GROUP BY
+               td.thread_uuid, td.thread_text, td.thread_created_at, td.thread_likes, td.thread_reposts,
+               td.thread_shares_count, td.thread_views_count,thread_author_uuid, td.thread_author_name, td.thread_author_email,
+               td.thread_author_image,thread_reply_count, td.thread_community_uuid, com.name, com.image;
+        `))
 
-        // let result = await db.execute(sql.raw(commentsRepliesSql("95bff2e8-e10c-43a0-938d-f8620e1c1cea", "comments_replies")))
+        // Retrives a single user's bio, and all their top threads 
+        // const result = await db.execute(sql.raw(`
+        // WITH UserThreads AS (
+        //     SELECT
+        //         t.*,
+        //         (SELECT COUNT(*) FROM threadis WHERE parent_id = t.uuid) AS replies_count
+        //     FROM
+        //         threadis t
+        //     WHERE
+        //         parent_id IS NULL
+        //         AND author = '1cfafd95-11b5-4814-be4a-728b76187a2d'
+        // )
+        // SELECT
+        //     (SELECT bio FROM users WHERE uuid = '1cfafd95-11b5-4814-be4a-728b76187a2d') AS user_bio,
+        //     json_agg(json_build_object(
+        //         'uuid', uuid,
+        //         'text', text,
+        //         'author', author,
+        //         'community', community,
+        //         'created_at', created_at,
+        //         'likes', likes,
+        //         'reposts', reposts,
+        //         'shares_count', shares_count,
+        //         'views_count', views_count,
+        //         'parent_id', parent_id,
+        //         'replies_count', replies_count
+        //     ) ORDER BY created_at DESC ) AS user_threads
+        // FROM
+        //     UserThreads;
+        // `))
 
-        // let row = commentsRepliesCleanUp(result.rows)
+        // Retrives all comments/replies for a single user for notifications page
+        // const result = await db.execute(sql.raw(`
+        // SELECT
+        // t.uuid AS comment_uuid,
+        // t.text AS comment_text,
+        // t.author AS comment_author_id,
+        // u.name AS comment_author_name,
+        // u.image AS comment_author_image,
+        // t.created_at AS comment_created_at,
+        // t.parent_id AS comment_parent_id
+        // FROM
+        // threadis t
+        // LEFT JOIN
+        // users u ON t.author = u.uuid
+        // WHERE
+        // t.parent_id IS NOT NULL
+        // AND (
+        //     SELECT author
+        //     FROM threadis parent
+        //     WHERE parent.uuid = t.parent_id
+        // ) = '1cfafd95-11b5-4814-be4a-728b76187a2d'
+        // ORDER BY
+        // t.created_at DESC;
+        // `))
 
-        // const result = await db.execute(sql.raw(userAndThreadCount("e2f8de16-af09-483c-b411-f087f7b8e8c1")))
+        // Retrives all comments/replies created by a single user
+        //  const result = await db.execute(sql.raw(`
+        //  SELECT t.*, p.author AS parent_author_uuid
+        //  FROM threadis t
+        //  JOIN threadis p ON t.parent_id = p.uuid
+        //  WHERE t.parent_id IS NOT NULL
+        //  AND t.author = 'cdafbd38-db80-45bc-a96a-c4a2960db6c0'
+        //  ORDER BY t.created_at DESC;
+        // `))
 
-        let result = await db.execute(sql.raw(userThreadsAndCooments("e2f8de16-af09-483c-b411-f087f7b8e8c1")))
+    if(!result.rows) throw new Error("tada!")
 
-        let rows = userThreadsAndCoomentsCleanUp(result.rows)
-
-
-
-
-        // const result =  await db.execute(sql`UPDATE "test" 
-        // SET "names" = array_append("names", 'kiwiooooooooooooooooo') 
-        // WHERE "id" = '8ea5bbdc-6490-4d79-803f-280b829ad735';`)
-
-        // const result =  await db.execute(sql`UPDATE "test" 
-        // SET "names" = array_remove("names", 'kiwiooooooooooooooooo') 
-        // WHERE "id" = '8ea5bbdc-6490-4d79-803f-280b829ad735';`)
-
-
-        // const response = await db.execute(sql.raw(topThreadisSql()))
-        // const result = threadisCleanUp(response.rows)
-
-        // const response = await db.execute(sql.raw(commentsRepliesSql("7acbc0cb-801d-4874-a285-0f6ee5fe4d37")))
-        // const result = commentsRepliesCleanUp(response.rows)
-
-
-// TODO: limits, offset, orderby
-//////////////////////////////////////////////////////////////////////////////
-
-        if(!rows.length) throw new Error("tada!")
-
-        return NextResponse.json(rows)
+        return NextResponse.json(result.rows)
     } catch (error: any) {
         return NextResponse.json({error: error.message})
     } 
 }
-

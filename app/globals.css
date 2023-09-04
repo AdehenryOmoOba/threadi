@@ -8,8 +8,8 @@ html,body{
 body {
   user-zoom: fixed;
   user-select: none;
-  min-height: 100vh;
-  min-height: 100dvh;
+  max-height: 100vh;
+  max-height: 100dvh;
   width: 100vw;
   width: 100dvw;
   background: rgb(0, 0, 0);
@@ -28,7 +28,7 @@ body {
 
   /* Activity */
   .activity-card {
-    @apply flex items-center gap-2 rounded-md bg-dark-2 px-7 py-4;
+    @apply flex flex-col items-start gap-y-0 rounded-md bg-dark-2 px-7 py-4;
   }
 
   /* No Result */
@@ -139,7 +139,7 @@ body {
 
 /* Tab */
 .tab {
-  @apply flex min-h-[50px] flex-1 items-center gap-3 bg-dark-2 text-light-2 data-[state=active]:bg-[#0e0e12] data-[state=active]:text-light-2 !important;
+  @apply flex min-h-[50px] flex-1 items-center gap-3 bg-dark-4 text-light-2 data-[state=active]:bg-[#0e0e12] data-[state=active]:text-light-2 !important;
 }
 
 .no-focus {

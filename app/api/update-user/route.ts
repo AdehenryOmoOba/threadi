@@ -20,8 +20,6 @@ export async function PUT(req: NextRequest){
 
     try {
 
-        
-
         const user = await db.update(users).set({name, bio, image, onboarded: true}).where(eq(users.uuid, uuid)).returning()
 
         path === "/profile/edit" ? revalidatePath(path) : revalidatePath("/")

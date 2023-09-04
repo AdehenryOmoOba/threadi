@@ -15,13 +15,14 @@ export default async function Home() {
 
   const response = await getThreadis(1, 10)
 
+  // await new Promise((resolve, _) => setTimeout(resolve, 5000))
+
   const threadis = response && response.threads
 
   const isNext = response && response.isNext
 
   return (
     <>
-     {/* <h1 className="head-text">Home Page 👋</h1> */}
      <HeadText content='Home' />
      <section className="mt-9 flex flex-col gap-5">
       {
@@ -31,18 +32,19 @@ export default async function Home() {
         {threadis.map((threadi) => {
           return (
             <ThreadiCard
-             key={threadi.thread_uuid}
-             id={threadi.thread_uuid}
+             key={threadi.uuid}
+             id={threadi.uuid}
              currentUser={user?.pgUUID}
-             content={threadi.thread_text}
-             authorId={threadi.thread_author.author_uuid}
-             authorImage={threadi.thread_author.author_image}
-             authorName={threadi.thread_author.author_name}
-             communityId={threadi.community_uuid}
-             communityName={threadi.community_name}
-             communityImage={threadi.community_image}
+             content={threadi.text}
+             authorId={threadi.author}
+             authorImage={threadi.author_image}
+             authorName={threadi.author_name}
+             authorEmail={threadi.author_email}
+             communityId={threadi.community || undefined}
+             communityName={threadi.community_name || undefined}
+             communityImage={threadi.community_image || undefined}
              createdAt={threadi.created_at}
-             commentsCount={threadi.comments_count}
+             commentsCount={threadi.replies_count}
              />
            )
         })}

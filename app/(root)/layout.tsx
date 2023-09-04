@@ -28,8 +28,8 @@ export default function RootLayout({
           <TopBar />
           <main className='flex flex-row'>
             <LeftSideBar />
-            <section className="main-container">
-              <BackButton />
+            <section className="relative main-container">
+              {/* <BackButton /> */}
               <div className="w-full max-w-4xl">
                 {children}
               </div>

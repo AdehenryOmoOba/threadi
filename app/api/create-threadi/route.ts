@@ -8,12 +8,11 @@ import { NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest){
 
-    const {author,text,community,path}: NewThreadInfo = await req.json()
+    const {author,text,community,path, parentId}: NewThreadInfo = await req.json()
 
     try {
-        
-        const newThreadi = await db.insert(threadis).values({author, text, community}).returning()
-        revalidatePath("/")
+        const newThreadi = await db.insert(threadis).values({author, text, community, parentId}).returning()
+        revalidatePath(path)
         return NextResponse.json(newThreadi)
     } catch (error: any) {
         console.log("error block from create-threadi API: ", error.message)
