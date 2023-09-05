@@ -22,7 +22,7 @@ async function page({searchParams: {user_id, profile_image,profile_name,profile_
             <Image src={activity.comment_author_image} alt='profile picture' width={20} height={20} className='rounded-full object-cover' />
             <p className='!text-small-regular text-light-1'><span className='mr-1 text-primary-500'>{activity.comment_author_name}</span> replied to your thread</p>
           </Link>
-          <ThreadiCard authorEmail={profile_email} authorId={user_id} authorImage={profile_image} authorName={profile_name} isComment id={user_id} content={activity.parent_thread_text} createdAt={activity.parent_thread_created_at} currentUser={user_id} commentsCount={0} isSUbThread/>
+          <ThreadiCard authorEmail={profile_email} authorId={user_id} authorImage={profile_image} authorName={profile_name} isComment id={user_id} content={activity.parent_thread_text} createdAt={activity.parent_thread_created_at} currentUser={user_id} commentsCount={0} isSUbThread threadParentId={activity.comment_parent_id}/>
         </article>
       </div>)))
       : (<p className='!text-base-regular text-light-3'>You currently have no activity</p>)}

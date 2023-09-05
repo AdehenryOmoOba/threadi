@@ -32,8 +32,8 @@ export default async function ThreadsTab({currentUserId, topThreads, profileName
 
   return (
     <section className='mt-9 flex flex-col gap-10'>
-      {topThreads && topThreads.map(({uuid, author, text, created_at, reply_count}) => (
-        <ThreadiCard key={uuid} id={uuid} authorId={author} currentUser={currentUserId} content={text} createdAt={created_at} commentsCount={reply_count} authorName={profileName} authorEmail={profileEmail} authorImage={profile_image || defaultProfileImg} />
+      {topThreads && topThreads.map(({uuid, author, text, created_at, reply_count, parent_id}) => (
+        <ThreadiCard key={uuid} id={uuid} authorId={author} threadParentId={parent_id} currentUser={currentUserId} content={text} createdAt={created_at} commentsCount={reply_count} authorName={profileName} authorEmail={profileEmail} authorImage={profile_image || defaultProfileImg} />
       ))}
     </section>
   )
