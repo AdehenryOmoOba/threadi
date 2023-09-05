@@ -55,10 +55,6 @@ body {
     @apply flex flex-col justify-between gap-4 max-xs:rounded-xl max-xs:bg-dark-3 max-xs:p-4 xs:flex-row xs:items-center;
   }
 
-  .user-card_avatar {
-    @apply flex flex-1 items-start justify-start gap-3 xs:items-center;
-  }
-
   .user-card_btn {
     @apply h-auto min-w-[74px] rounded-lg bg-primary-500 text-[12px] text-light-1 !important;
   }
