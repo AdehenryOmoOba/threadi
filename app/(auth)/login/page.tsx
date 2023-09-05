@@ -8,12 +8,14 @@ import Image from "next/image"
 import { useState, SyntheticEvent, ChangeEvent, useEffect } from "react"
 import { signIn, useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import Spinner from "@/components/Spinner"
  
 
 function Login() {
   const [formData, setformData] = useState({email: "", password: ""})
   const session = useSession()
   const router = useRouter()
+  const [LoginLoading, setLoginLoading] = useState(false)
 
   useEffect(() => {
     console.log("onboarded: ",session.data?.user?.onboarded)
@@ -30,6 +32,7 @@ function Login() {
   }
 
   const handleSubmit = async (e: SyntheticEvent) => {
+    setLoginLoading(true)
     e.preventDefault()
     const response = await signIn("credentials", {
       email: formData.email, 
@@ -40,6 +43,7 @@ function Login() {
   }
 
   const handleGithubLogin = async (e: SyntheticEvent) => {
+    setLoginLoading(true)
     const response = await signIn("github", {
       redirect: false
     })
@@ -47,6 +51,7 @@ function Login() {
   }
 
   const handleGoogleLogin = async (e: SyntheticEvent) => {
+    setLoginLoading(true)
     const response = await signIn("google", {
       redirect: false
     })
@@ -63,14 +68,14 @@ function Login() {
         </div>
 
         <div className="flex flex-col w-full gap-y-3 mb-2">
-          <div onClick={handleGoogleLogin} className="items-center flex justify-center gap-x-3 p-2 rounded-lg  bg-slate-900 cursor-pointer">
+          <div onClick={handleGoogleLogin} className="items-center flex justify-center gap-x-3 p-1 rounded-lg  bg-slate-900 cursor-pointer">
             <div className="text-[20px]">
               <FcGoogle />
             </div>
             <p className="text-light-1 text-small-medium font-normal py-2">Login with Google</p>
           </div>
 
-          <div onClick={handleGithubLogin} className="items-center flex justify-center gap-x-3 p-2 rounded-lg bg-slate-900 cursor-pointer">
+          <div onClick={handleGithubLogin} className="items-center flex justify-center gap-x-3 p-1 rounded-lg bg-slate-900 cursor-pointer">
             <div className="text-[20px] text-light-1">
               <AiOutlineGithub />
             </div>
@@ -80,13 +85,13 @@ function Login() {
 
         <div className="w-full relative h-5">
           <div className="absolute h-[0.5px] w-full bg-slate-700 top-1/2 -translate-y-1/2" />
-          <p className="absolute bg-slate-950 text-small-medium text-slate-400 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 px-6">Or</p>
+          <p className="absolute bg-slate-950 text-small-medium text-slate-500 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 px-6">Or</p>
         </div>
 
         <div className="w-full">
           <div className="mb-4">
             <label className="text-small-medium text-slate-400 inline-block mb-2">Email</label>
-            <div className="flex px-2 py-4 rounded-lg border border-slate-800">
+            <div className="flex px-2 py-3 rounded-lg border border-slate-800">
               <Image height={20} width={20} src={userSvg} alt="user svg" className="mr-1"/>
               <input type="text" name="email" value={formData.email} onChange={handleFormUpdate} placeholder="someone@example.com" className="bg-transparent text-small-medium flex-1 px-1 text-sm outline-none text-slate-200 placeholder:text-small-medium placeholder:text-slate-600"/> 
             </div>
@@ -94,7 +99,7 @@ function Login() {
 
           <div>
             <label className="text-small-medium text-slate-400 inline-block mb-2">Password</label>
-            <div className="flex px-2 py-4 rounded-lg border border-slate-800">
+            <div className="flex px-2 py-3 rounded-lg border border-slate-800">
               <Image height={15} width={15} src={passwordSvg} alt="password svg" className="mr-1"/>
               <input type="password" name="password" value={formData.password} onChange={handleFormUpdate} placeholder="Password" className="bg-transparent text-small-medium flex-1 px-1 text-sm outline-none text-slate-200 placeholder:text-small-medium placeholder:text-slate-600"/> 
             </div>
@@ -104,7 +109,9 @@ function Login() {
           </Link>
         </div>
 
-        <button type="submit" onClick={handleSubmit} className="bg-primary-500 outline-none text-sm font-bold w-full text-light-1 py-3 rounded-lg">Login</button>
+        <button type="submit" onClick={handleSubmit} className="flex justify-center bg-primary-500 outline-none text-sm font-bold w-full text-light-1 py-3 rounded-lg">
+          {LoginLoading ? (<><Spinner />Please wait...</>) : "Login"}
+        </button>
 
         <small className="text-[12px] font-light text-slate-400">
           Don't have an account? <span className="font-extrabold text-slate-200"><Link href="/register">Register</Link></span>
@@ -116,3 +123,5 @@ function Login() {
 }
 
 export default Login
+
+

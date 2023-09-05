@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { Form ,FormField, FormItem, FormControl } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -12,6 +12,7 @@ import Image from 'next/image'
 import defaultProfileImage from "../../public/assets/user.svg"
 import { createThreadi } from '@/lib/utils'
 import { useSession } from 'next-auth/react'
+import LoadingDots from '../loadingDots/LoadingDots'
 
 
 type CommentProp = {
@@ -22,6 +23,7 @@ function CommentBox({threadId}: CommentProp) {
     const pathname = usePathname()
     const {data} = useSession()
     const router = useRouter()
+    const [creatingComment, setCreatingComment] = useState(false)
   
     const form = useForm({
       resolver: zodResolver(CommentValidationSchema),
@@ -31,10 +33,12 @@ function CommentBox({threadId}: CommentProp) {
     })
   
     const onSubmit = async (values: z.infer<typeof CommentValidationSchema>) => {
+      setCreatingComment(true)
       console.log({text: values.thread, path: pathname, parentId: threadId})
       data?.user?.pgUUID && await createThreadi({text: values.thread, author: data.user.pgUUID, path: pathname, parentId: threadId})
       form.reset()
       router.refresh()
+      setCreatingComment(false)
     }
 
     if(!data) return null
@@ -57,7 +61,9 @@ function CommentBox({threadId}: CommentProp) {
             </FormItem>
           )}
         />
-      <Button type="submit" className='comment-form_btn'>Reply</Button>
+      <Button type="submit" className='comment-form_btn'>
+        {creatingComment ? <LoadingDots /> : <p className='w-8'>Reply</p>}
+      </Button>
     </form>
   </Form>
   )

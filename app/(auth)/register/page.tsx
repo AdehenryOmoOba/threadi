@@ -37,14 +37,14 @@ function Register() {
         </div>
 
         <div className="flex flex-col w-full gap-y-3 mb-2">
-          <div className="items-center flex justify-center gap-x-3 p-2 rounded-lg  bg-slate-900 cursor-pointer">
+          <div className="items-center flex justify-center gap-x-3 p-1 rounded-lg  bg-slate-900 cursor-pointer">
             <div className="text-[20px]">
               <FcGoogle />
             </div>
             <p className="text-light-1 text-small-medium font-normal py-2">Register with Google</p>
           </div>
 
-          <div onClick={() => signIn("github", {redirect: true, callbackUrl: "/onboarding"})} className="items-center flex justify-center gap-x-3 p-2 rounded-lg bg-slate-900 cursor-pointer">
+          <div onClick={() => signIn("github", {redirect: true, callbackUrl: "/onboarding"})} className="items-center flex justify-center gap-x-3 p-1 rounded-lg bg-slate-900 cursor-pointer">
             <div className="text-[20px] text-light-1">
               <AiOutlineGithub />
             </div>
@@ -54,13 +54,13 @@ function Register() {
 
         <div className="w-full relative h-5">
           <div className="absolute h-[0.5px] w-full bg-slate-700 top-1/2 -translate-y-1/2" />
-          <p className="absolute bg-slate-950 text-small-medium text-slate-400 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 px-6">Or</p>
+          <p className="absolute bg-slate-950 text-small-medium text-slate-500 top-1/2 -translate-y-1/2 left-1/2 -translate-x-1/2 px-6">Or</p>
         </div>
 
         <div className="w-full">
           <div className="mb-4">
             <label className="text-small-medium text-slate-400 inline-block mb-2">Email</label>
-            <div className="flex px-2 py-4 rounded-lg border border-slate-800">
+            <div className="flex px-2 py-3 rounded-lg border border-slate-800">
               <Image height={20} width={20} src={userSvg} alt="user svg" className="mr-1"/>
               <input type="text" name="email" value={formData.email} onChange={handleFormUpdate} placeholder="someone@example.com" className="bg-transparent text-small-medium flex-1 px-1 text-sm outline-none text-slate-200 placeholder:text-small-medium placeholder:text-slate-600"/> 
             </div>
@@ -68,7 +68,7 @@ function Register() {
 
           <div className="mb-4">
             <label className="text-small-medium text-slate-400 inline-block mb-2">Password</label>
-            <div className="flex px-2 py-4 rounded-lg border border-slate-800">
+            <div className="flex px-2 py-3 rounded-lg border border-slate-800">
               <Image height={15} width={15} src={passwordSvg} alt="password svg" className="mr-1"/>
               <input type="password" name="password" value={formData.password} onChange={handleFormUpdate} placeholder="Password" className="bg-transparent text-small-medium flex-1 px-1 text-sm outline-none text-slate-200 placeholder:text-small-medium placeholder:text-slate-600"/> 
             </div>
@@ -76,7 +76,7 @@ function Register() {
 
           <div>
             <label className="text-small-medium text-slate-400 inline-block mb-2">Confirm Password</label>
-            <div className="flex px-2 py-4 rounded-lg border border-slate-800">
+            <div className="flex px-2 py-3 rounded-lg border border-slate-800">
               <Image height={15} width={15} src={passwordSvg} alt="password svg" className="mr-1"/>
               <input type="password" name="confirmPassword" value={formData.confirmPassword} onChange={handleFormUpdate} placeholder="Confirm Password" className="bg-transparent text-small-medium flex-1 px-1 text-sm outline-none text-slate-200 placeholder:text-small-medium placeholder:text-slate-600"/> 
             </div>
