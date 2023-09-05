@@ -42,20 +42,12 @@ function Login() {
     if(!response?.ok) return 
   }
 
-  const handleGithubLogin = async (e: SyntheticEvent) => {
+  const handleSocialLogin = async ( provider: "google" | "github") => {
     setLoginLoading(true)
-    const response = await signIn("github", {
+    const response = await signIn(provider, {
       redirect: false
     })
-    if(!response?.ok) return 
-  }
-
-  const handleGoogleLogin = async (e: SyntheticEvent) => {
-    setLoginLoading(true)
-    const response = await signIn("google", {
-      redirect: false
-    })
-    if(!response?.ok) return 
+    if(!response?.ok) return
   }
 
   return (
@@ -68,14 +60,14 @@ function Login() {
         </div>
 
         <div className="flex flex-col w-full gap-y-3 mb-2">
-          <div onClick={handleGoogleLogin} className="items-center flex justify-center gap-x-3 p-1 rounded-lg  bg-slate-900 cursor-pointer">
+          <div onClick={() => handleSocialLogin("google")} className="items-center flex justify-center gap-x-3 p-1 rounded-lg  bg-slate-900 cursor-pointer">
             <div className="text-[20px]">
               <FcGoogle />
             </div>
             <p className="text-light-1 text-small-medium font-normal py-2">Login with Google</p>
           </div>
 
-          <div onClick={handleGithubLogin} className="items-center flex justify-center gap-x-3 p-1 rounded-lg bg-slate-900 cursor-pointer">
+          <div onClick={() => handleSocialLogin("github")} className="items-center flex justify-center gap-x-3 p-1 rounded-lg bg-slate-900 cursor-pointer">
             <div className="text-[20px] text-light-1">
               <AiOutlineGithub />
             </div>
@@ -109,7 +101,7 @@ function Login() {
           </Link>
         </div>
 
-        <button type="submit" onClick={handleSubmit} className="flex justify-center bg-primary-500 outline-none text-sm font-bold w-full text-light-1 py-3 rounded-lg">
+        <button type="submit" onClick={handleSubmit} disabled={LoginLoading} className="flex justify-center bg-primary-500 outline-none text-sm font-bold w-full text-light-1 py-3 rounded-lg">
           {LoginLoading ? (<><Spinner />Please wait...</>) : "Login"}
         </button>
 

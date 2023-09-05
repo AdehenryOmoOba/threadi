@@ -9,22 +9,38 @@ import { useState, SyntheticEvent, ChangeEvent } from "react"
 import { signIn } from "next-auth/react"
 import { createUser } from "@/lib/utils"
 import { useRouter } from "next/navigation"
+import Spinner from "@/components/Spinner"
  
 
 function Register() {
   const [formData, setformData] = useState({email: "", password: "", confirmPassword: ""})
   const router = useRouter()
+  const [registerLoading, setRegisterLoading] = useState(false)
+
 
   const handleFormUpdate = (e:ChangeEvent<HTMLInputElement>) => {
     setformData({...formData, [e.target.name]: e.target.value})
   }
 
   const handleSubmit = async (e: SyntheticEvent) => {
+    setRegisterLoading(true)
     e.preventDefault()
     if(formData.password !== formData.confirmPassword) return
     const newUser = await createUser(formData)
     console.log({newUser})
     router.push("/login")
+  }
+
+  const handleSocialRegister = async (provider: "google" | "github") => {
+    setRegisterLoading(true)
+    const response = await signIn(provider, {
+      redirect: false
+    })
+    setRegisterLoading(true)
+    if(!response?.ok) {
+      setRegisterLoading(false)
+      return
+    } 
   }
 
   return (
@@ -36,7 +52,7 @@ function Register() {
           <small className="text-slate-400">Join The Best Social Blogging App</small>
         </div>
 
-        <div className="flex flex-col w-full gap-y-3 mb-2">
+        <div onClick={() => handleSocialRegister("google")}  className="flex flex-col w-full gap-y-3 mb-2">
           <div className="items-center flex justify-center gap-x-3 p-1 rounded-lg  bg-slate-900 cursor-pointer">
             <div className="text-[20px]">
               <FcGoogle />
@@ -44,7 +60,7 @@ function Register() {
             <p className="text-light-1 text-small-medium font-normal py-2">Register with Google</p>
           </div>
 
-          <div onClick={() => signIn("github", {redirect: true, callbackUrl: "/onboarding"})} className="items-center flex justify-center gap-x-3 p-1 rounded-lg bg-slate-900 cursor-pointer">
+          <div onClick={() => handleSocialRegister("github")} className="items-center flex justify-center gap-x-3 p-1 rounded-lg bg-slate-900 cursor-pointer">
             <div className="text-[20px] text-light-1">
               <AiOutlineGithub />
             </div>
@@ -83,7 +99,10 @@ function Register() {
           </div>
         </div>
 
-        <button type="submit" onClick={handleSubmit} className="bg-primary-500 outline-none text-sm font-bold w-full text-light-1 py-3 rounded-lg">Register</button>
+
+        <button type="submit" onClick={handleSubmit} disabled={registerLoading} className="flex justify-center bg-primary-500 outline-none text-sm font-bold w-full text-light-1 py-3 rounded-lg">
+          {registerLoading ? (<><Spinner />Please wait...</>) : "Register"}
+        </button>
 
         <small className="text-[12px] font-light text-slate-400">
           Already registered? <span className="font-extrabold text-slate-200"><Link href="/login">Login</Link></span>
