@@ -45,6 +45,8 @@ export default async function Home() {
              communityImage={threadi.community_image || undefined}
              createdAt={threadi.created_at}
              commentsCount={threadi.replies_count}
+             isComment={false}
+             threadParentId={threadi.parent_id}
              />
            )
         })}

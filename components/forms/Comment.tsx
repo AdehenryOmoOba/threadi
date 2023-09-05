@@ -62,7 +62,7 @@ function CommentBox({threadId}: CommentProp) {
           )}
         />
       <Button type="submit" className='comment-form_btn'>
-        {creatingComment ? <LoadingDots /> : <p className='w-8'>Reply</p>}
+        {creatingComment ? <LoadingDots /> : <p className='w-8 text-small-semibold'>Reply</p>}
       </Button>
     </form>
   </Form>

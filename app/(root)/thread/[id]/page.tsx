@@ -16,7 +16,7 @@ async function page({params: {id}, searchParams: {user}}: Props) {
   const tacr = await getThredAndReplies(id)
 
   if(!tacr) return null
-
+  
   return (
     <section className='relative mt-10'>
       <div>
@@ -34,6 +34,8 @@ async function page({params: {id}, searchParams: {user}}: Props) {
        authorEmail={tacr.thread_author_email}
        commentsCount={tacr.thread_reply_count}
        linkDisabled={true}
+       threadParentId={tacr.thread_parent_id}
+       
        />
       </div>
 
@@ -56,6 +58,7 @@ async function page({params: {id}, searchParams: {user}}: Props) {
             commentsCount={Number(child.comment_reply_count)}
             authorEmail={child.comment_author_email}
             isComment={true}
+            threadParentId={tacr.thread_uuid}
             />
           ))
         }

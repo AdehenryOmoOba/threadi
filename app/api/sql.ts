@@ -45,6 +45,7 @@ WITH ThreadData AS (
     t.author AS thread_author_uuid,
     t.views_count AS thread_views_count,
     t.reply_count AS thread_reply_count,
+    t.parent_id AS thread_parent_id,
     u.name AS thread_author_name,
     u.email AS thread_author_email,
     u.image AS thread_author_image,
@@ -95,7 +96,7 @@ LEFT JOIN (
 LEFT JOIN communities com ON com.uuid = td.thread_community_uuid
 GROUP BY
     td.thread_uuid, td.thread_text, td.thread_created_at, td.thread_likes, td.thread_reposts,
-    td.thread_shares_count, td.thread_views_count,thread_author_uuid, td.thread_author_name, td.thread_author_email,
+    td.thread_shares_count, td.thread_views_count,thread_author_uuid, td.thread_parent_id, td.thread_author_name, td.thread_author_email,
     td.thread_author_image,thread_reply_count, td.thread_community_uuid, com.name, com.image;
 
 `);

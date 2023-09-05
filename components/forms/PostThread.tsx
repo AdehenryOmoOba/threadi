@@ -51,7 +51,7 @@ function PostThread({userId}: {userId: string}) {
         />
 
     <Button type="submit" title="Post Thread" className='bg-primary-500 w-32 flex self-end rounded-full'>
-      {creatingComment ? <LoadingDots /> : <p className='w-8'>Post</p>}
+      {creatingComment ? <LoadingDots /> : <p className='w-8 text-small-semibold'>Post</p>}
     </Button>
   </form>
 

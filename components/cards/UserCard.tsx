@@ -22,7 +22,7 @@ function UserCard({id, name, imgUrl, userType, email}: Props) {
       </div>
       <div className="flex flex-1 items-center justify-between">
           <div className='flex items-center w-full'>
-            <h4 className='text-base-semibold text-light-1'>{name}</h4>
+            <h4 className='text-base-semibold text-light-1 mr-1'>{name}</h4>
             <p className='text-small-medium text-gray-1 text-ellipsis'>@{userhandle}</p>
           </div>
           <ViewButton id={id} name={name} email={email} image={imgUrl}/>

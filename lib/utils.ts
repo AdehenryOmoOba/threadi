@@ -54,6 +54,7 @@ export type ThreadRow = {
 
 export type ThreadAndReplies = {
   thread_uuid: string
+  thread_parent_id: string
   thread_text:  string
   parent_community_uuid:  string | null
   thread_community_name: string | null

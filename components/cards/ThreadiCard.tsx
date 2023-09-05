@@ -18,12 +18,13 @@ type Props = {
   authorImage: string,
   linkDisabled?: boolean
   isSUbThread?: boolean
+  threadParentId: string | null
 }
 
-async function ThreadiCard({id,currentUser, content, authorId,authorName,authorImage,authorEmail,commentsCount,isComment=false,linkDisabled=false,isSUbThread=false}: Props) {
+async function ThreadiCard({id,threadParentId,currentUser, content, authorId,authorName,authorImage,authorEmail,commentsCount,isComment=false,linkDisabled=false,isSUbThread=false}: Props) {
 
- 
   const commentTense = commentsCount < 2 ? "comment" : "comments"
+  const replyTense = commentsCount < 2 ? "reply" : "replies"
   const linkState = linkDisabled ? "#" : `/thread/${id}?user=${currentUser}`
 
   return (
@@ -56,7 +57,7 @@ async function ThreadiCard({id,currentUser, content, authorId,authorName,authorI
               </div>
                {!!commentsCount &&
                 <Link href={linkState}>
-                  <p className='mt-1 text-subtle-medium text-gray-1'>{commentsCount} {commentTense}</p>
+                  <p className='mt-1 text-subtle-medium text-gray-1'>{commentsCount} {threadParentId ? replyTense : commentTense}</p>
                 </Link>
               }
             </div>
