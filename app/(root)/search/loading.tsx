@@ -10,7 +10,7 @@ function loading() {
     <section>
       <HeadText content='Search' />
       <div className="mt-14 flex flex-col gap-9">
-        {threads.map((_,i) => (<SearchSkeleton />))}
+        {threads.map((_,i) => (<SearchSkeleton key={i} />))}
       </div>
     </section>
   )

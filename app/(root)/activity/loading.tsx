@@ -10,7 +10,7 @@ function loading() {
     <section>
       <HeadText content='Activity' />
       <section className='mt-10 flex flex-col gap-5'>
-        {activities.map((_,i) => (<ActivitySkeleton />))}
+        {activities.map((_,i) => (<ActivitySkeleton key={i} />))}
       </section>
     </section>
   )
