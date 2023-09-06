@@ -50,7 +50,7 @@ async function ThreadiCard({id,threadParentId,currentUser, content, authorId,aut
               </div>
             </Link>
             {!isSUbThread && 
-              <div className='text-slate-400 flex justify-center cursor-pointer'>
+              <div className='text-gray-1 flex justify-center cursor-pointer'>
                 <BsThreeDots />
               </div>
             }
