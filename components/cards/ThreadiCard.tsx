@@ -46,7 +46,7 @@ async function ThreadiCard({id,threadParentId,currentUser, content, authorId,aut
             <div className='flex items-center w-full justify-between'>
             <Link href={`/profile/${authorId}?profile_name=${authorName}&profile_email=${authorEmail}&profile_image=${authorImage}`} className='w-fit'>
               <div className='w-[45vw]'>
-                  <span className='text-small-medium text-gray-1 block truncate'><span className='text-white font-bold'>{authorName}</span>{" "}@{userhandle}xedeededededd</span>
+                  <span className='text-small-medium text-gray-1 block truncate'><span className='text-white font-bold'>{authorName}</span>{" "}@{userhandle}</span>
               </div>
             </Link>
             {!isSUbThread && 
