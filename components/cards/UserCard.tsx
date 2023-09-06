@@ -19,7 +19,7 @@ function UserCard({id, name, imgUrl, userType, email}: Props) {
     <article className='flex w-full'>
       <div className="flex relative flex-1 items-center gap-x-2 pl-2">
         <div className='relative h-12 w-12 object-cover'>
-          <Image src={imgUrl} alt={name} fill className='rounded-full object-cover' />
+          {imgUrl && <Image src={imgUrl} alt={name} fill className='rounded-full object-cover' />}
         </div>
         <div className='w-[45vw]'>
           <span className='text-small-medium text-gray-1 block truncate'><span className='text-white font-bold'>{name}</span>{" "}@{userhandle}</span>

@@ -3,6 +3,7 @@ import { fetchUsers, findUser } from '@/lib/utils'
 import { getServerSession } from 'next-auth'
 import UserCard from '@/components/cards/UserCard'
 import HeadText from '@/components/shared/HeadText'
+import defaultImage from "@/public/assets/user.svg"
 
 
 async function page() {
