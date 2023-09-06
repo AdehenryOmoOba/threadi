@@ -23,9 +23,9 @@ function Register() {
   }
 
   const handleSubmit = async (e: SyntheticEvent) => {
+    if(formData.password !== formData.confirmPassword) return
     setRegisterLoading(true)
     e.preventDefault()
-    if(formData.password !== formData.confirmPassword) return
     const newUser = await createUser(formData)
     console.log({newUser})
     router.push("/login")

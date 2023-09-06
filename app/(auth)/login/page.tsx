@@ -32,6 +32,7 @@ function Login() {
   }
 
   const handleSubmit = async (e: SyntheticEvent) => {
+    if(!formData.email || !formData.password) return
     setLoginLoading(true)
     e.preventDefault()
     const response = await signIn("credentials", {
