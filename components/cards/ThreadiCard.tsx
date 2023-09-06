@@ -49,9 +49,11 @@ async function ThreadiCard({id,threadParentId,currentUser, content, authorId,aut
                   <span className='text-small-medium text-gray-1 block truncate'><span className='text-white font-bold'>{authorName}</span>{" "}@{userhandle}xedeededededd</span>
               </div>
             </Link>
-            <div className='text-slate-400 flex justify-center cursor-pointer'>
-              <BsThreeDots />
-            </div>
+            {!isSUbThread && 
+              <div className='text-slate-400 flex justify-center cursor-pointer'>
+                <BsThreeDots />
+              </div>
+            }
             </div>
             <p className='mt-2 text-small-regular text-light-2'>{content}</p>
 
