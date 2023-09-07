@@ -35,6 +35,8 @@ async function page({params: {id}, searchParams: {user}}: Props) {
        commentsCount={tacr.thread_reply_count}
        linkDisabled={true}
        threadParentId={tacr.thread_parent_id}
+       isLiked={tacr.thread_likes?.some((id) => id === user) || false}
+       likesCount={tacr.thread_likes?.length || 0}
        
        />
       </div>
@@ -59,6 +61,8 @@ async function page({params: {id}, searchParams: {user}}: Props) {
             authorEmail={child.comment_author_email}
             isComment={true}
             threadParentId={tacr.thread_uuid}
+            isLiked={child.comment_likes?.some((id) => id === user) || false}
+            likesCount={child.comment_likes?.length || 0}
             />
           ))
         }

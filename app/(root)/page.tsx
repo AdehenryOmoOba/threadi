@@ -30,6 +30,10 @@ export default async function Home() {
           <p className="no-result">No threads to display 😐</p>
         ) : (<>
         {threadis.map((threadi) => {
+          let isliked = false
+          if(session?.user && threadi.likes){
+            isliked = threadi.likes.some((id) => id === session.user?.pgUUID)
+          }
           return (
             <ThreadiCard
              key={threadi.uuid}
@@ -47,6 +51,8 @@ export default async function Home() {
              commentsCount={threadi.replies_count}
              isComment={false}
              threadParentId={threadi.parent_id}
+             isLiked={isliked}
+             likesCount={threadi.likes?.length || 0}
              />
            )
         })}

@@ -1,7 +1,7 @@
 {
   "version": "5",
   "dialect": "pg",
-  "id": "f671cde9-e15c-4f26-a192-b492d12c0262",
+  "id": "f693c950-e291-4d31-b784-3d98eabcb116",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "communities": {
@@ -97,13 +97,13 @@
         },
         "likes": {
           "name": "likes",
-          "type": "text[]",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
         "reposts": {
           "name": "reposts",
-          "type": "text[]",
+          "type": "jsonb",
           "primaryKey": false,
           "notNull": false
         },
@@ -126,6 +126,13 @@
           "type": "uuid",
           "primaryKey": false,
           "notNull": false
+        },
+        "reply_count": {
+          "name": "reply_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "default": 0
         }
       },
       "indexes": {},

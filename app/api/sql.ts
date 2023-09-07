@@ -205,5 +205,21 @@ ORDER BY
     t.created_at DESC;
 `)
 
+export const updateLikes = (currentUserId: string, threadId: string, likeStatus: string) => {
+
+  const add = `
+  UPDATE threadis
+  SET likes = array_append(likes, '${currentUserId}')
+  WHERE uuid = '${threadId}';
+  `
+  const remove = `
+  UPDATE threadis
+  SET likes = array_remove(likes, '${currentUserId}')
+  WHERE uuid = '${threadId}';
+  `
+
+  return likeStatus === 'true' ? add : remove
+   
+}
 
 
