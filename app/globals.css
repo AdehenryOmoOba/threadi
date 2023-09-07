@@ -5,6 +5,7 @@
 html,body{
   overflow-x: hidden;
 }
+
 body {
   user-zoom: fixed;
   user-select: none;
@@ -13,12 +14,22 @@ body {
   width: 100vw;
   width: 100dvw;
   background: rgb(0, 0, 0);
+  scrollbar-gutter: stable;
 }
+
+::-webkit-scrollbar{
+  width: 4px;
+}
+::-webkit-scrollbar-thumb{
+  background-color: #3b3939;
+  border-radius: 100px;
+}
+
 
 @layer components {
   /* main */
   .main-container {
-    @apply flex min-h-screen flex-1 flex-col items-center bg-dark-1 px-6 pb-10 pt-20 max-md:pb-32 sm:px-10;
+    @apply flex min-h-screen flex-1 flex-col items-center bg-dark-1 pl-7 pr-6 pb-10 pt-20 max-md:pb-32 sm:px-10;
   }
 
   /* Head Text */
