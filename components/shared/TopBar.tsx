@@ -22,7 +22,7 @@ async function TopBar() {
   return (
     <nav className='topbar bg-transparent backdrop-blur-lg md:backdrop-blur-0'>
       <Link href="/" className='flex items-center gap-2'>
-        <Image className='hidden sm:flex rounded-full xs:hidden lg:flex' src={logo} alt='logo' width={40} height={40}/>
+        <Image className='hidden sm:flex rounded-full xs:hidden lg:flex' src={logo} alt='logo' width={20} height={20}/>
         <p className={`${borel.className} !flex h-10 leading-10 bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCAF45]  bg-clip-text text-transparent text-heading4-medium  max-xs:hidden`}>Threadi</p>
       </Link>
 
