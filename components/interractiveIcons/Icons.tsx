@@ -19,6 +19,7 @@ type Prop = {
 
 function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUserId, threadId, likesCount}: Prop) {
   const [liked, setliked] = useState(likeStatus)
+  const [likesNumber, setlikesNumber] = useState(likesCount)
   const likeref = useRef(false)
   const path = usePathname()
   const router = useRouter()
@@ -55,7 +56,7 @@ function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUse
       </Link>
 
        <div className='relative'>
-        {!!likesCount && <span className='absolute text-subtle-medium text-gray-1 top-1/2 -translate-y-1/2 -left-7 w-6 flex justify-end'>{likesCount}</span>}
+        {!!likesCount && <span className='absolute text-subtle-medium text-gray-1 top-1/2 -translate-y-1/2 -left-7 w-6 flex justify-end'>{likesNumber}</span>}
         <Image onClick={handleLike} src={liked ? likedHeart : heart} alt='heart' width={24} height={24} className='cursor-pointer object-contain'/>
       </div>
       
