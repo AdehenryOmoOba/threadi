@@ -20,7 +20,7 @@ export const threadis = pgTable("threadis", {
 		threadisParentIdFkey: foreignKey({
 			columns: [table.parentId],
 			foreignColumns: [table.uuid]
-		}),
+		})
 	}
 });
 
