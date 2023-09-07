@@ -44,3 +44,11 @@
 Register:
   Credentials:
   - 
+
+
+****** webhooks to implement ******
+- createCommunity
+- addMenberToCommunity
+- deleteCommunity
+- removeUserFromCommunity
+- updateCommunityInfo
