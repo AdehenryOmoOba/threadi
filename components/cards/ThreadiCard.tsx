@@ -20,8 +20,8 @@ type Props = {
   authorImage: string,
   linkDisabled?: boolean
   isSUbThread?: boolean
-  isLiked: boolean
-  likesCount: number
+  isLiked?: boolean
+  likesCount?: number
   threadParentId: string | null
 }
 
@@ -58,7 +58,7 @@ async function ThreadiCard({id,threadParentId,currentUser, content, authorId,aut
             <p className='mt-2 text-small-regular text-light-2'>{content}</p>
 
             {!isSUbThread &&
-             <Icons linkState={linkState} commentsCount={commentsCount} threadParentId={threadParentId} likeStatus={isLiked} currentUserId={currentUser} threadId={id} likesCount={likesCount}/>
+             <Icons linkState={linkState} commentsCount={commentsCount} threadParentId={threadParentId} likeStatus={isLiked || false} currentUserId={currentUser} threadId={id} likesCount={likesCount || 0}/>
             }
           </div>  
         </div>  
