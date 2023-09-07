@@ -4,8 +4,10 @@ import * as databaseSchema from "./schema"
 import "dotenv/config"
 
 
+const dbString = process.env.NODE_ENV === "production" ? process.env.DB_URL + "?sslmode=require" : process.env.DB_URL
+
 export const  pool = new Pool({
-  connectionString: process.env.DB_URL + "?sslmode=require"
+  connectionString: dbString 
 })
 
 export const db = drizzle(pool, {schema: databaseSchema})

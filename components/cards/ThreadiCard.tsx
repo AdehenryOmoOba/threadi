@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import React from 'react'
 import {BsThreeDots} from "react-icons/bs"
+import Icons from '../interractiveIcons/Icons'
 
 type Props = {
   id: string
@@ -19,16 +20,15 @@ type Props = {
   authorImage: string,
   linkDisabled?: boolean
   isSUbThread?: boolean
+  isLiked: boolean
+  likesCount: number
   threadParentId: string | null
 }
 
-async function ThreadiCard({id,threadParentId,currentUser, content, authorId,authorName,authorImage,authorEmail,commentsCount,isComment=false,linkDisabled=false,isSUbThread=false}: Props) {
+async function ThreadiCard({id,threadParentId,currentUser, content, authorId,authorName,authorImage,authorEmail,commentsCount,isComment=false,linkDisabled=false,isSUbThread=false, isLiked, likesCount}: Props) {
 
-  const commentTense = commentsCount < 2 ? "comment" : "comments"
-  const replyTense = commentsCount < 2 ? "reply" : "replies"
   const linkState = linkDisabled ? "#" : `/thread/${id}?user=${currentUser}`
   const userhandle = authorEmail.split("@")[0]
-
 
   return (
     <article className={`flex w-full flex-col rounded-xl bg-dark-2 p-7  ${isComment && "bg-transparent mb-2 px-0 xs:px-7"}`}>
@@ -58,21 +58,7 @@ async function ThreadiCard({id,threadParentId,currentUser, content, authorId,aut
             <p className='mt-2 text-small-regular text-light-2'>{content}</p>
 
             {!isSUbThread &&
-            <div className="mt-5 flex flex-col gap-3">
-              <div className="flex gap-3.5">
-                <Image src={"/assets/heart-gray.svg"} alt='heart' width={24} height={24} className='cursor-pointer object-contain'/>
-                <Link href={linkState}>
-                  <Image src={"/assets/reply.svg"} alt='reply' width={24} height={24} className='cursor-pointer object-contain'/>
-                </Link>
-                <Image src={"/assets/repost.svg"} alt='repost' width={24} height={24} className='cursor-pointer object-contain'/>
-                <Image src={"/assets/share.svg"} alt='share' width={24} height={24} className='cursor-pointer object-contain'/>
-              </div>
-               {!!commentsCount &&
-                <Link href={linkState}>
-                  <p className='mt-1 text-subtle-medium text-gray-1'>{commentsCount} {threadParentId ? replyTense : commentTense}</p>
-                </Link>
-              }
-            </div>
+             <Icons linkState={linkState} commentsCount={commentsCount} threadParentId={threadParentId} likeStatus={isLiked} currentUserId={currentUser} threadId={id} likesCount={likesCount}/>
             }
           </div>  
         </div>  

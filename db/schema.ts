@@ -1,4 +1,4 @@
-import { pgTable,foreignKey, uuid, varchar, timestamp, integer, unique, text, boolean, primaryKey, } from "drizzle-orm/pg-core"
+import { pgTable,foreignKey, uuid, varchar, timestamp, integer, unique, text, boolean, primaryKey, jsonb, } from "drizzle-orm/pg-core"
 import { relations } from "drizzle-orm"
 
 
@@ -8,8 +8,8 @@ export const threadis = pgTable("threadis", {
 	author: uuid("author").notNull(),
 	community: uuid("community"),
 	createdAt: timestamp("created_at", { mode: 'string' }).defaultNow().notNull(),
-	likes: text("likes").array(),
-	reposts: text("reposts").array(),
+	likes: jsonb("likes"),
+	reposts: jsonb("reposts"),
 	sharesCount: integer("shares_count").default(0),
 	viewsCount: integer("views_count").default(0),
 	parentId: uuid("parent_id"),

@@ -308,3 +308,30 @@ export async function fetchUsers({searchString, userId, pageNumber, pageSize, so
     return null 
   }
 }
+
+type UpdateLikes = {currentUserId: string, 
+  threadId: string,
+  likeStatus: string, 
+  path: string
+}
+
+
+export async function updateLikes({currentUserId, threadId,likeStatus, path}: UpdateLikes) {
+  
+  console.log( " from utils: updateLikes: ",{currentUserId, threadId,likeStatus, path})
+
+  try {
+    const response = await fetch(`${origin}api/update-likes`, {
+      method: "PUT",
+      body: JSON.stringify({currentUserId, threadId,likeStatus, path})
+    })
+    if(!response.ok ) throw new Error("unable to update likes")
+
+    await response.json()
+    
+    return response
+  } catch (error: any) {
+    console.log(error.message)
+  }
+}
+

@@ -43,72 +43,72 @@ export async function GET(){
         // `))
 
         // Retrieves a thread and all it's comments/replies 
-         const result = await db.execute(sql.raw(`
-           WITH ThreadData AS (
-               SELECT
-               t.uuid AS thread_uuid,
-               t.text AS thread_text,
-               t.created_at AS thread_created_at,
-               t.likes AS thread_likes,
-               t.reposts AS thread_reposts,
-               t.shares_count AS thread_shares_count,
-               t.author AS thread_author_uuid,
-               t.parent_id AS thread_parent_id,
-               t.views_count AS thread_views_count,
-               t.reply_count AS thread_reply_count,
-               u.name AS thread_author_name,
-               u.email AS thread_author_email,
-               u.image AS thread_author_image,
-               t.community AS thread_community_uuid
-               FROM
-                   threadis t
-               LEFT JOIN
-                   users u ON t.author = u.uuid
-               WHERE
-                   t.uuid = '8943a991-5b3a-4345-bb93-52fa2e19edaa'
-           )
-           SELECT
-               td.*,
-               json_agg(cmnts.*) AS comments,
-               CASE
-                   WHEN td.thread_community_uuid IS NOT NULL THEN com.name
-                   ELSE NULL
-               END AS thread_community_name,
-               CASE
-                   WHEN td.thread_community_uuid IS NOT NULL THEN com.image
-                   ELSE NULL
-               END AS thread_community_image
-           FROM
-               ThreadData td
-           LEFT JOIN (
-               SELECT
-               t.uuid AS comment_uuid,
-               t.text AS comment_text,
-               t.reply_count AS comment_reply_count,
-               t.created_at AS comment_created_at,
-               t.likes AS comment_likes,
-               t.reposts AS comment_reposts,
-               t.shares_count AS comment_shares_count,
-               t.views_count AS comment_views_count,
-               u.name AS comment_author_name,
-               u.email AS comment_author_email,
-               u.image AS comment_author_image,
-               u.uuid AS comment_author_uuid
-               FROM
-                   threadis t
-               LEFT JOIN
-                   users u ON t.author = u.uuid
-               WHERE
-                   t.parent_id = '8943a991-5b3a-4345-bb93-52fa2e19edaa'
-                ORDER BY
-                   t.created_at DESC
-           ) cmnts ON TRUE
-           LEFT JOIN communities com ON com.uuid = td.thread_community_uuid
-           GROUP BY
-               td.thread_uuid,td.thread_parent_id, td.thread_text, td.thread_created_at, td.thread_likes, td.thread_reposts,
-               td.thread_shares_count, td.thread_views_count,thread_author_uuid, td.thread_author_name, td.thread_author_email,
-               td.thread_author_image,thread_reply_count, td.thread_community_uuid, com.name, com.image;
-        `))
+        //  const result = await db.execute(sql.raw(`
+        //    WITH ThreadData AS (
+        //        SELECT
+        //        t.uuid AS thread_uuid,
+        //        t.text AS thread_text,
+        //        t.created_at AS thread_created_at,
+        //        t.likes AS thread_likes,
+        //        t.reposts AS thread_reposts,
+        //        t.shares_count AS thread_shares_count,
+        //        t.author AS thread_author_uuid,
+        //        t.parent_id AS thread_parent_id,
+        //        t.views_count AS thread_views_count,
+        //        t.reply_count AS thread_reply_count,
+        //        u.name AS thread_author_name,
+        //        u.email AS thread_author_email,
+        //        u.image AS thread_author_image,
+        //        t.community AS thread_community_uuid
+        //        FROM
+        //            threadis t
+        //        LEFT JOIN
+        //            users u ON t.author = u.uuid
+        //        WHERE
+        //            t.uuid = '8943a991-5b3a-4345-bb93-52fa2e19edaa'
+        //    )
+        //    SELECT
+        //        td.*,
+        //        json_agg(cmnts.*) AS comments,
+        //        CASE
+        //            WHEN td.thread_community_uuid IS NOT NULL THEN com.name
+        //            ELSE NULL
+        //        END AS thread_community_name,
+        //        CASE
+        //            WHEN td.thread_community_uuid IS NOT NULL THEN com.image
+        //            ELSE NULL
+        //        END AS thread_community_image
+        //    FROM
+        //        ThreadData td
+        //    LEFT JOIN (
+        //        SELECT
+        //        t.uuid AS comment_uuid,
+        //        t.text AS comment_text,
+        //        t.reply_count AS comment_reply_count,
+        //        t.created_at AS comment_created_at,
+        //        t.likes AS comment_likes,
+        //        t.reposts AS comment_reposts,
+        //        t.shares_count AS comment_shares_count,
+        //        t.views_count AS comment_views_count,
+        //        u.name AS comment_author_name,
+        //        u.email AS comment_author_email,
+        //        u.image AS comment_author_image,
+        //        u.uuid AS comment_author_uuid
+        //        FROM
+        //            threadis t
+        //        LEFT JOIN
+        //            users u ON t.author = u.uuid
+        //        WHERE
+        //            t.parent_id = '8943a991-5b3a-4345-bb93-52fa2e19edaa'
+        //         ORDER BY
+        //            t.created_at DESC
+        //    ) cmnts ON TRUE
+        //    LEFT JOIN communities com ON com.uuid = td.thread_community_uuid
+        //    GROUP BY
+        //        td.thread_uuid,td.thread_parent_id, td.thread_text, td.thread_created_at, td.thread_likes, td.thread_reposts,
+        //        td.thread_shares_count, td.thread_views_count,thread_author_uuid, td.thread_author_name, td.thread_author_email,
+        //        td.thread_author_image,thread_reply_count, td.thread_community_uuid, com.name, com.image;
+        // `))
 
         // Retrives a single user's bio, and all their top threads 
         // const result = await db.execute(sql.raw(`
@@ -167,14 +167,16 @@ export async function GET(){
         // `))
 
         // Retrives all comments/replies created by a single user
-        //  const result = await db.execute(sql.raw(`
-        //  SELECT t.*, p.author AS parent_author_uuid
-        //  FROM threadis t
-        //  JOIN threadis p ON t.parent_id = p.uuid
-        //  WHERE t.parent_id IS NOT NULL
-        //  AND t.author = 'cdafbd38-db80-45bc-a96a-c4a2960db6c0'
-        //  ORDER BY t.created_at DESC;
-        // `))
+         const result = await db.execute(sql.raw(`
+         SELECT t.*, p.author AS parent_author_uuid
+         FROM threadis t
+         JOIN threadis p ON t.parent_id = p.uuid
+         WHERE t.parent_id IS NOT NULL
+         AND t.author = 'cdafbd38-db80-45bc-a96a-c4a2960db6c0'
+         ORDER BY t.created_at DESC;
+        `))
+
+    
 
     if(!result.rows) throw new Error("tada!")
 
