@@ -8,7 +8,7 @@ let pool;
 
 if(!pool){
     pool = new Pool({
-        connectionString: process.env.DB_URL
+        connectionString: process.env.DB_URL + "?sslmode=require" 
     })
 } 
 

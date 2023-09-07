@@ -42,6 +42,7 @@ function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUse
      if (!currentUserId) return 
       likeref.current = true
       setliked((prev) => !prev)
+      liked ? setlikesNumber((prev) => prev - 1) : setlikesNumber((prev) => prev + 1)
     }
 
   const commentTense = commentsCount < 2 ? "comment" : "comments"
@@ -56,7 +57,7 @@ function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUse
       </Link>
 
        <div className='relative'>
-        {!!likesCount && <span className='absolute text-subtle-medium text-gray-1 top-1/2 -translate-y-1/2 -left-7 w-6 flex justify-end'>{likesNumber}</span>}
+        {!!likesNumber && <span className='absolute text-subtle-medium text-gray-1 top-1/2 -translate-y-1/2 -left-7 w-6 flex justify-end'>{likesNumber}</span>}
         <Image onClick={handleLike} src={liked ? likedHeart : heart} alt='heart' width={24} height={24} className='cursor-pointer object-contain'/>
       </div>
       

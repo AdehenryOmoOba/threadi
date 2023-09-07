@@ -7,7 +7,8 @@ import "dotenv/config"
 const dbString = process.env.NODE_ENV === "production" ? process.env.DB_URL + "?sslmode=require" : process.env.DB_URL
 
 export const  pool = new Pool({
-  connectionString: dbString 
+  // connectionString: dbString 
+  connectionString: process.env.DB_URL + "?sslmode=require" 
 })
 
 export const db = drizzle(pool, {schema: databaseSchema})
