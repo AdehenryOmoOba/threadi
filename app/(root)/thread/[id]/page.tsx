@@ -37,7 +37,6 @@ async function page({params: {id}, searchParams: {user}}: Props) {
        threadParentId={tacr.thread_parent_id}
        isLiked={tacr.thread_likes?.some((id) => id === user) || false}
        likesCount={tacr.thread_likes?.length || 0}
-       
        />
       </div>
 

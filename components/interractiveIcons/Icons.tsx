@@ -6,6 +6,7 @@ import likedHeart from "@/public/assets/heart-liked.svg"
 import heart from "@/public/assets/heart-gray.svg"
 import { updateLikes } from '@/lib/utils'
 import { usePathname, useRouter } from 'next/navigation'
+import { useSession } from 'next-auth/react'
 
 type Prop = {
   linkState: string, 
@@ -23,14 +24,15 @@ function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUse
   const likeref = useRef(false)
   const path = usePathname()
   const router = useRouter()
+  const {data} = useSession()
 
   useEffect(() => {
-    if(!currentUserId) return
+    if(!data?.user) return
     
     if(likeref.current){
       async function likeUpdate() {
-        if(!currentUserId) return
-        await updateLikes({currentUserId, threadId, path, likeStatus: liked.toString()})
+        if(!data?.user) return
+        await updateLikes({currentUserId: data?.user.pgUUID, threadId, path, likeStatus: liked.toString()})
       }
       likeUpdate()
       router.refresh()
@@ -39,7 +41,7 @@ function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUse
     }, [liked])
   
     const handleLike = () => {
-     if (!currentUserId) return 
+     if (!data?.user) return 
       likeref.current = true
       setliked((prev) => !prev)
       liked ? setlikesNumber((prev) => prev - 1) : setlikesNumber((prev) => prev + 1)
