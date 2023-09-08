@@ -10,6 +10,8 @@ function LinkItems({label, route, imgURL}: {label: string, route: string, imgURL
   const path = usePathname()
   const {data} = useSession()
 
+  console.log("from Link items page",{sessionData: data})
+
   const isActive = path.includes(route) && route.length > 1 || path === "/" && route === "/" || path.startsWith("/thread") && route === "/"
 
   if(data?.user && route === "/profile") route = (`/profile/${data.user.pgUUID}?current_user=${data.user.name}&profile_email=${data.user.email}&profile_image=${data.user.image}&profile_name=${data.user.name}`)

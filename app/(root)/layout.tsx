@@ -28,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <SessionProvider session={session}>
+      <NextAuthSessionProvider>
         <body className={`${inter.className}`}>
           <TopBar />
           <main className='flex flex-row'>
@@ -43,7 +43,7 @@ export default async function RootLayout({
           </main>
           <BottomBar/>
         </body>
-      </SessionProvider>
+      </NextAuthSessionProvider>
     </html>
   )
 }
