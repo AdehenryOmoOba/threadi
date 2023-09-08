@@ -3,6 +3,7 @@ import Link from 'next/link'
 import React from 'react'
 import {BsThreeDots} from "react-icons/bs"
 import Icons from '../interractiveIcons/Icons'
+import { threadId } from 'worker_threads'
 
 type Props = {
   id: string
@@ -58,7 +59,7 @@ async function ThreadiCard({id,threadParentId,currentUser, content, authorId,aut
             <p className='mt-2 text-small-regular text-light-2'>{content}</p>
 
             {!isSUbThread &&
-             <Icons linkState={linkState} commentsCount={commentsCount} threadParentId={threadParentId} likeStatus={isLiked || false} currentUserId={currentUser} threadId={id} likesCount={likesCount || 0}/>
+             <Icons key={id} linkState={linkState} commentsCount={commentsCount} threadParentId={threadParentId} likeStatus={isLiked || false} currentUserId={currentUser} threadId={id} likesCount={likesCount || 0} testText={content} />
             }
           </div>  
         </div>  

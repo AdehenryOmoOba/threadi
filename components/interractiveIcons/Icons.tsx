@@ -5,7 +5,6 @@ import Image from 'next/image'
 import likedHeart from "@/public/assets/heart-liked.svg"
 import heart from "@/public/assets/heart-gray.svg"
 import { updateLikes } from '@/lib/utils'
-import { usePathname, useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 
 type Prop = {
@@ -16,14 +15,13 @@ type Prop = {
   currentUserId: string | undefined
   threadId: string
   likesCount: number
+  testText?: string
 }
 
-function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUserId, threadId, likesCount}: Prop) {
+function Icons({linkState, commentsCount, threadParentId, likeStatus, threadId, likesCount, testText=""}: Prop) {
   const [liked, setliked] = useState(likeStatus)
   const [likesNumber, setlikesNumber] = useState(likesCount)
   const likeref = useRef(false)
-  const path = usePathname()
-  const router = useRouter()
   const {data} = useSession()
 
   useEffect(() => {
@@ -32,10 +30,9 @@ function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUse
     if(likeref.current){
       async function likeUpdate() {
         if(!data?.user) return
-        await updateLikes({currentUserId: data?.user.pgUUID, threadId, path, likeStatus: liked.toString()})
+        await updateLikes({currentUserId: data?.user.pgUUID, threadId, likeStatus: liked.toString()})
       }
       likeUpdate()
-      router.refresh()
       }
       
     }, [liked])
@@ -58,9 +55,9 @@ function Icons({linkState, commentsCount, threadParentId, likeStatus, currentUse
         <Image src={"/assets/reply.svg"} alt='reply' width={24} height={24} className='cursor-pointer object-contain'/>
       </Link>
 
-       <div className='relative'>
+       <div className={`relative ${data?.user && "cursor-pointer"}`}>
         {!!likesNumber && <span className='absolute text-subtle-medium text-gray-1 top-1/2 -translate-y-1/2 -left-7 w-6 flex justify-end'>{likesNumber}</span>}
-        <Image onClick={handleLike} src={liked ? likedHeart : heart} alt='heart' width={24} height={24} className='cursor-pointer object-contain'/>
+        <Image onClick={handleLike} src={liked ? likedHeart : heart} alt='heart' width={24} height={24} className='object-contain'/>
       </div>
       
       <Image src={"/assets/repost.svg"} alt='repost' width={24} height={24} className='cursor-pointer object-contain'/>

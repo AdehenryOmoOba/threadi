@@ -1,6 +1,8 @@
+import { authOptions } from '@/app/api/auth/[...nextauth]/route'
 import ThreadiCard from '@/components/cards/ThreadiCard'
 import CommentBox from '@/components/forms/Comment'
 import { getThredAndReplies } from '@/lib/utils'
+import { getServerSession } from 'next-auth'
 import React from 'react'
 
 
@@ -12,6 +14,8 @@ type Props = {
 }
 
 async function page({params: {id}, searchParams: {user}}: Props) {
+
+  const session = await getServerSession(authOptions)
   
   const tacr = await getThredAndReplies(id)
 
@@ -46,24 +50,32 @@ async function page({params: {id}, searchParams: {user}}: Props) {
 
       <div className='mt-10'>
         { tacr.comments[0] &&
-          tacr.comments?.map((child) => (
-            <ThreadiCard
-            key={child.comment_uuid}
-            id={child.comment_uuid}
-            currentUser={user}
-            content={child.comment_text}
-            authorId={child.comment_author_uuid}
-            authorImage={child.comment_author_image}
-            authorName={child.comment_author_name}
-            createdAt={child.comment_created_at}
-            commentsCount={Number(child.comment_reply_count)}
-            authorEmail={child.comment_author_email}
-            isComment={true}
-            threadParentId={tacr.thread_uuid}
-            isLiked={child.comment_likes?.some((id) => id === user) || false}
-            likesCount={child.comment_likes?.length || 0}
-            />
-          ))
+          tacr.comments?.map((child) => {
+
+            let isliked = false
+            if(session?.user && child.comment_likes?.length){
+              isliked = child.comment_likes.some((id) => id === session.user?.pgUUID)
+            }
+
+            return (
+              <ThreadiCard
+              key={child.comment_uuid}
+              id={child.comment_uuid}
+              currentUser={user}
+              content={child.comment_text}
+              authorId={child.comment_author_uuid}
+              authorImage={child.comment_author_image}
+              authorName={child.comment_author_name}
+              createdAt={child.comment_created_at}
+              commentsCount={Number(child.comment_reply_count)}
+              authorEmail={child.comment_author_email}
+              isComment={true}
+              threadParentId={tacr.thread_uuid}
+              isLiked={isliked}
+              likesCount={child.comment_likes?.length || 0}
+              />
+            )
+          })
         }
       </div>
     </section>

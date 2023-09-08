@@ -34,7 +34,6 @@ function CommentBox({threadId}: CommentProp) {
   
     const onSubmit = async (values: z.infer<typeof CommentValidationSchema>) => {
       setCreatingComment(true)
-      console.log({text: values.thread, path: pathname, parentId: threadId})
       data?.user?.pgUUID && await createThreadi({text: values.thread, author: data.user.pgUUID, path: pathname, parentId: threadId})
       form.reset()
       router.refresh()

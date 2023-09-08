@@ -250,7 +250,7 @@ export async function getThredAndReplies(threadId: string) {
 }
 
 export async function createThreadi({author, community,text, parentId=null, path}: NewThreadInfo) {
-  console.log( " from createThreadi route",{author, community,text, parentId, path})
+
   try {
     const response = await fetch(`${origin}api/create-threadi`, {
       method: "POST",
@@ -312,19 +312,17 @@ export async function fetchUsers({searchString, userId, pageNumber, pageSize, so
 type UpdateLikes = {currentUserId: string, 
   threadId: string,
   likeStatus: string, 
-  path: string
 }
 
 
-export async function updateLikes({currentUserId, threadId,likeStatus, path}: UpdateLikes) {
+export async function updateLikes({currentUserId, threadId,likeStatus}: UpdateLikes) {
   
-  console.log( " from utils: updateLikes: ",{currentUserId, threadId,likeStatus, path})
-
   try {
     const response = await fetch(`${origin}api/update-likes`, {
       method: "PUT",
-      body: JSON.stringify({currentUserId, threadId,likeStatus, path})
+      body: JSON.stringify({currentUserId, threadId,likeStatus})
     })
+    
     if(!response.ok ) throw new Error("unable to update likes")
 
     await response.json()

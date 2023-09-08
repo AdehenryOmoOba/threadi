@@ -7,6 +7,8 @@ import RightSideBar from '@/components/shared/RightSideBar'
 import BottomBar from '@/components/shared/BottomBar'
 import NextAuthSessionProvider from '../(auth)/NextAuthSessionProvider'
 import BackButton from '@/components/shared/BackButton'
+import SessionProvider from '../(auth)/NextAuthSessionProvider'
+import { getServerSession } from 'next-auth'
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -16,14 +18,17 @@ export const metadata: Metadata = {
   description: 'A social blogging website powered by NextJS',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+
+  const session = await getServerSession()
+
   return (
     <html lang="en">
-      <NextAuthSessionProvider>
+      <SessionProvider session={session}>
         <body className={`${inter.className}`}>
           <TopBar />
           <main className='flex flex-row'>
@@ -38,7 +43,7 @@ export default function RootLayout({
           </main>
           <BottomBar/>
         </body>
-      </NextAuthSessionProvider>
+      </SessionProvider>
     </html>
   )
 }

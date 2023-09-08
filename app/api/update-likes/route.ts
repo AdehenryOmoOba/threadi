@@ -14,8 +14,6 @@ export async function PUT(req: NextRequest){
         
         const result = await db.execute(sql.raw(updateLikes(currentUserId, threadId,likeStatus)))
 
-        if(path) revalidatePath(path)
-
         return NextResponse.json({updateStatus: "success"})
     } catch (error: any) {
         return NextResponse.json({error: error.message})
