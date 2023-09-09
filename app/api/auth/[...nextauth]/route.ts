@@ -89,6 +89,8 @@ export const authOptions: NextAuthOptions = {
 
           const user = await db.query.users.findFirst({where: eq(users.email, credentials.email)})
 
+          console.log({user})
+
           if(user && user.password){
             const isPasswordMatch = await bcrypt.compare(credentials.password, user.password)
             if(isPasswordMatch) return {...user, pgUUID: user.uuid, bio: user.bio}

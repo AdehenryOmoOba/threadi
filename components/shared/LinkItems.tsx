@@ -7,10 +7,9 @@ import { useSession } from 'next-auth/react'
 
 
 function LinkItems({label, route, imgURL}: {label: string, route: string, imgURL: string}) {
+  
   const path = usePathname()
   const {data} = useSession()
-
-  console.log("from Link items page",{sessionData: data})
 
   const isActive = path.includes(route) && route.length > 1 || path === "/" && route === "/" || path.startsWith("/thread") && route === "/"
 

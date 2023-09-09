@@ -42,15 +42,15 @@ function PostThread({userId}: {userId: string}) {
           name="thread"
           render={({ field }) => (
             <FormItem className='flex flex-col gap-3 w-full'>
-              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 rounded-2xl p-8'>
-                <Textarea {...field} rows={6}  />
+              <FormControl className='no-focus border border-dark-4 bg-dark-3 text-light-1 rounded-2xl p-4'>
+                <Textarea {...field} rows={8}  />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-    <Button type="submit" title="Post Thread" className='bg-primary-500 w-32 flex self-end rounded-full'>
+    <Button type="submit" title="Post Thread" className='bg-primary-500 w-32 flex self-end rounded-full active:bg-primary-500 hover:bg-blue'>
       {creatingComment ? <LoadingDots /> : <p className='w-8 text-small-semibold'>Post</p>}
     </Button>
   </form>

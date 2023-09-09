@@ -32,15 +32,19 @@ function Login() {
   }
 
   const handleSubmit = async (e: SyntheticEvent) => {
+    e.preventDefault()
     if(!formData.email || !formData.password) return
     setLoginLoading(true)
-    e.preventDefault()
     const response = await signIn("credentials", {
       email: formData.email, 
       password: formData.password, 
       redirect: false
     })
-    if(!response?.ok) return 
+
+    if(response?.error) {
+      setLoginLoading(false)
+      return
+    } 
   }
 
   const handleSocialLogin = async ( provider: "google" | "github") => {
@@ -48,7 +52,11 @@ function Login() {
     const response = await signIn(provider, {
       redirect: false
     })
-    if(!response?.ok) return
+
+    if(response?.error) {
+      setLoginLoading(false)
+      return
+    } 
   }
 
   return (
