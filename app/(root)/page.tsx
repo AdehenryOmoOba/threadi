@@ -13,7 +13,7 @@ export default async function Home() {
 
   console.log("user from home page: ", user)
 
-  const response = await getThreadis(1, 10)
+  const response = await getThreadis(1, 25)
 
   // await new Promise((resolve, _) => setTimeout(resolve, 5000))
 
